@@ -1,7 +1,4 @@
-on: 
-  push:
-    branch:
-    - testing_extension
+on: [push]
 
 jobs:
   build:
@@ -23,6 +20,4 @@ jobs:
       - name: Run tests
         uses: GabrielBB/xvfb-action@v1.0
         with:
-          run: |
-            cd ./extension
-            npm test
+          run: node ./extension/out/test/runTest.js
