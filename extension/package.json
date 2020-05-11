@@ -18,7 +18,7 @@
 		"commands": [
 			{
 				"command": "chartGraphX.displayState",
-                "title": "Display State"
+				"title": "Display State"
 			}
 		]
 	},
