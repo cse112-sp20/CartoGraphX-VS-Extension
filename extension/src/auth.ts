@@ -2,10 +2,6 @@ import * as firebase from 'firebase';
 import * as vscode from 'vscode';
 
 
-export const firebaseConfig = {
-    // place the config for your firebase application here
-};
-
 export const signIn = async (auth: firebase.auth.Auth) => {
     console.log('signing in...');
     const email = await vscode.window.showInputBox({placeHolder: 'email'});
