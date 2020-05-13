@@ -1,0 +1,67 @@
+# Github action workflow that will minify, deploy
+
+name: Minify, Deploy, and Release
+on:
+    repository_dispatch:
+        types: passed-tests
+jobs:
+    minify:
+        runs-on: ubuntu-latest
+        steps:
+            # Checks-out your repository under $GITHUB_WORKSPACE, so auto-minify job can access it
+        -   uses: actions/checkout@v2
+          
+        -   name: Auto Minify
+            uses: ./.github/workflows/auto-minify
+            with:
+                directory: 'site/content'
+                output: 'site/min_content'
+          
+            # Auto commits minified files to the repository
+            # Ignore it if you don't want to commit the files to the repository 
+        -   name: Auto committing minified files
+            uses: stefanzweifel/git-auto-commit-action@v4.1.6
+            with:
+                repository: 'site/min_content'
+                commit_message: "Github Action: Auto Minified JS and HTML files"
+                branch: ${{ github.ref }}
+    build:
+        name: Deploy to Firebase
+        needs: minify
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: actions/checkout@v1
+            with:
+                submodules: true
+        -   uses: ryank90/action-hugo-firebase-deploy@master
+            with:
+                firebase-token: 1//0fowuyNuqjreWCgYIARAAGA8SNwF-L9IrWiWUAxQNwCC3TuV6ntVxZ4iHMznorz6NKiL3p-mty73EdQvNbk3uxjtwCLWTHU9K0Wo
+    release:
+        name: Release
+        needs: minify
+        runs-on: ubuntu-18.04
+        steps:
+        -   name: Checkout
+            uses: actions/checkout@v2
+        -   name: Setup Node.js
+            uses: actions/setup-node@v1
+            with:
+                node-version: 12
+        -   name: Install dependencies
+            run: npm install
+        -   name: Release
+            env:
+                GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+                NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+            run: npx semantic-release
+    publish:
+        name: Publish
+        needs: release
+        runs-on: ubuntu-18.04
+        steps:
+        -   name: Vscode release plugin
+            uses: JCofman/vscodeaction@master
+            env:
+                PUBLISHER_TOKEN: ${{ secrets.PUBLISHER_TOKEN }}
+            with:
+                args: publish -p $PUBLISHER_TOKEN
