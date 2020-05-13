@@ -4,11 +4,11 @@ This is the VS code extension used to track the data needed for the Interactive 
 
 ## Running the extension
 
-To run the extension you have clone the repo and open the extension folder in VS Code.  
-``git clone https://github.com/cse112-sp20/ChartGraphX-MVP-Mini-Project-2-.git``
-``cd ChartGraphX-MVP-Mini-Project-2-/extension``
-``npm i``
-``code .``
+To run the extension you have clone the repo and open the extension folder in VS Code.    
+``git clone https://github.com/cse112-sp20/ChartGraphX-MVP-Mini-Project-2-.git``  
+``cd ChartGraphX-MVP-Mini-Project-2-/extension``  
+``npm i``  
+``code .``  
 
 Then, press F5 to open a new window with your extension loaded.
 Open one of your workspaces.
