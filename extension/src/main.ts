@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import {displayCurrentWorkingFile, statusBarItem} from './chartgraphx';
 import * as firebase from 'firebase';
 import { signIn, signOut, userStatus} from './auth'; 
-import  { firebaseConfig} from './config';
+import { firebaseConfig} from './config';
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
