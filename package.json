@@ -60,14 +60,23 @@
 			"@semantic-release/github"
 		],
 		"plugins": [
-		["@semantic-release/commit-analyzer", {
-			"preset": "angular",
-			"releaseRules": [
-			{"scope": "no-release", "release": false},
-			{"scope": "release", "release": "patch"}
-			]
-		}],
-		"@semantic-release/release-notes-generator"
+			[
+				"@semantic-release/commit-analyzer",
+				{
+					"preset": "angular",
+					"releaseRules": [
+						{
+							"scope": "no-release",
+							"release": false
+						},
+						{
+							"scope": "release",
+							"release": "patch"
+						}
+					]
+				}
+			],
+			"@semantic-release/release-notes-generator"
 		]
 	},
 	"dependencies": {
