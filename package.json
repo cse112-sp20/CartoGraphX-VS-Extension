@@ -17,8 +17,24 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "chartGraphX.displayState",
-                "title": "Display State"
+				"command": "chartGraphX.toolbarAction",
+				"title": "ChartGraphX actions"
+			},
+			{
+				"command": "chartGraphX.signIn",
+				"title": "CGphX signIn"
+			},
+			{
+				"command": "chartGraphX.signInGit",
+				"title": "CGphX github signIn"
+			},
+			{
+				"command": "chartGraphX.signOut",
+				"title": "CGphX signOut"
+			},
+			{
+				"command": "chartGraphX.checkAuthState",
+				"title": "CGphX current user"
 			}
 		]
 	},
@@ -42,5 +58,8 @@
 		"mocha": "^7.1.2",
 		"typescript": "^3.8.3",
 		"vscode-test": "^1.3.0"
+	},
+	"dependencies": {
+		"firebase": "^7.14.3"
 	}
 }
