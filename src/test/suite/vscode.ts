@@ -5,7 +5,7 @@ const languages = {
   };
   
   const StatusBarAlignment = {};
-  
+  const ExtensionContext = {};
   const window = {
     createStatusBarItem: jest.fn(() => ({
       show: jest.fn()
@@ -40,10 +40,12 @@ const languages = {
   };
   
   const commands = {
-    executeCommand: jest.fn()
+    executeCommand: jest.fn(),
+    registerCommand: jest.fn()
   };
   
   const vscode = {
+    ExtensionContext,
     languages,
     StatusBarAlignment,
     window,
