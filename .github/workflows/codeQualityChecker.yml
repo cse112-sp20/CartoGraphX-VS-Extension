@@ -2,24 +2,25 @@ name: Analyze code statically
 on:
   push:
     branch: [build/codeQuality]
+inputs:
+  files: ./src/main.ts
+    description: |
+      Specify files or directories
+      (Multiple files or directories can be specified by separating them with line feed)
+    required: false
+  options: ["--extra-ext", ".js"]
+    description: |
+      Changes `jshint` command line options.
+      Specify the options in JSON array format.
+      e.g.: '["--extra-ext", ".js"]'
+    required: false
+  working_directory: ./src
+    description: Changes the current working directory of the Node.js process
+    required: false
 jobs:
-  misspell:
+  jshint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Analyze code statically using misspell
-        uses: moneyforward/misspell-action@v0
-        with:
-          files: |
-            .
-            !./.git/
-            !./dist/
-  eslint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Analyze code statically using ESLint
-        uses: moneyforward/eslint-action@v0
-        with:
-          files: '.'
-          options: '["--ext", ".ts"]'
+      - name: Analyze code statically using JSHint
+        uses: moneyforward/jshint-action@v0
