@@ -7,11 +7,10 @@ on:
 jobs:
   jshint:
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./src
     steps:
       - uses: actions/checkout@v2
       - name: Analyze code statically using JSHint
         uses: moneyforward/jshint-action@v0
-        with: 
-          files: ./src
-          options:
-          working_directory: ./src
+        working-directory: ${{env.working-directory}}
