@@ -30,6 +30,8 @@ jobs:
       uses: GabrielBB/xvfb-action@v1.0
       with:
         run: npm run unit-test
+    - name: Checking format
+      uses: KSXGitHub/github-actions-sane-fmt@master
     - name: Slack Notification
       if: ${{ failure() }}
       uses: rtCamp/action-slack-notify@v2.0.0
