@@ -1,0 +1,40 @@
+# Github action workflow that will Release and Publish
+
+name: Release and Publish
+on:
+    repository_dispatch:
+        types: passed-tests
+jobs:
+    #build:
+    #    name: Deploy to Firebase
+    #    runs-on: ubuntu-latest
+    #    steps:
+    #    -   uses: actions/checkout@v1
+    #        with:
+    #            submodules: true
+    #    -   uses: ryank90/action-hugo-firebase-deploy@master
+    #        with:
+    #            firebase-token: 1//0fowuyNuqjreWCgYIARAAGA8SNwF-L9IrWiWUAxQNwCC3TuV6ntVxZ4iHMznorz6NKiL3p-mty73EdQvNbk3uxjtwCLWTHU9K0Wo
+    release:
+        name: Release
+        runs-on: ubuntu-18.04
+        steps:
+        -   name: Checkout
+            uses: actions/checkout@v2
+        -   name: Setup Node.js
+            uses: actions/setup-node@v1
+            with:
+                node-version: 12
+        -   name: Install dependencies
+            run: npm install
+        -   name: Release
+            env:
+                GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+                NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+            run: npx semantic-release
+        -   name: Vscode release plugin
+            uses: JCofman/vscodeaction@master
+            env:
+                PUBLISHER_TOKEN: ${{ secrets.PUBLISHER_TOKEN }}
+            with:
+                args: publish -p $PUBLISHER_TOKEN
