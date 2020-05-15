@@ -6,14 +6,103 @@
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "jsdoc"
     ],
     "rules": {
-        "@typescript-eslint/class-name-casing": "warn",
-        "@typescript-eslint/semi": "warn",
+        "constructor-super": "warn",
         "curly": "warn",
         "eqeqeq": "warn",
+        "no-buffer-constructor": "warn",
+        "no-caller": "warn",
+        "no-debugger": "warn",
+        "no-duplicate-case": "warn",
+        "no-duplicate-imports": "warn",
+        "no-eval": "warn",
+        "no-extra-semi": "warn",
+        "no-new-wrappers": "warn",
+        "no-redeclare": "off",
+        "no-sparse-arrays": "warn",
         "no-throw-literal": "warn",
-        "semi": "off"
-    }
+        "no-unsafe-finally": "warn",
+        "no-unused-labels": "warn",
+        "no-restricted-globals": [
+            "warn",
+            "name",
+            "length",
+            "event",
+            "closed",
+            "external",
+            "status",
+            "origin",
+            "orientation",
+            "context"
+        ], // non-complete list of globals that are easy to access unintentionally
+        "no-var": "warn",
+        "jsdoc/no-types": "warn",
+        "semi": "off",
+        "@typescript-eslint/semi": "warn",
+        "@typescript-eslint/class-name-casing": "warn",
+        "no-unused-expressions": [
+            "warn",
+            {
+                "allowTernary": true
+            }
+        ]
+    },
+    "overrides": [
+        {
+            "files": [
+                "*.js"
+            ],
+            "rules": {
+                "jsdoc/no-types": "off"
+            }
+        },
+        {
+            "files": [
+                "**/vscode.d.ts",
+                "**/vscode.proposed.d.ts"
+            ],
+            "rules": {
+                "vscode-dts-create-func": "warn",
+                "vscode-dts-literal-or-types": "warn",
+                "vscode-dts-interface-naming": "warn",
+                "vscode-dts-event-naming": [
+                    "warn",
+                    {
+                        "allowed": [
+                            "onCancellationRequested",
+                            "event"
+                        ],
+                        "verbs": [
+                            "accept",
+                            "change",
+                            "close",
+                            "collapse",
+                            "create",
+                            "delete",
+                            "dispose",
+                            "edit",
+                            "end",
+                            "expand",
+                            "hide",
+                            "open",
+                            "override",
+                            "receive",
+                            "register",
+                            "rename",
+                            "save",
+                            "send",
+                            "start",
+                            "terminate",
+                            "trigger",
+                            "unregister",
+                            "write"
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
 }
