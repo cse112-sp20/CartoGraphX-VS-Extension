@@ -2,21 +2,7 @@ name: Analyze code statically
 on:
   push:
     branch: [build/codeQuality]
-inputs:
-  files: 
-    description: |
-      Specify files or directories
-      (Multiple files or directories can be specified by separating them with line feed)
-    required: false
-  options: 
-    description: |
-      Changes `jshint` command line options.
-      Specify the options in JSON array format.
-      e.g.: '["--extra-ext", ".js"]'
-    required: false
-  working_directory: 
-    description: Changes the current working directory of the Node.js process
-    required: false
+
 jobs:
   jshint:
     runs-on: ubuntu-latest
@@ -24,3 +10,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Analyze code statically using JSHint
         uses: moneyforward/jshint-action@v0
+        with:
+          files: '.'
+          options: '["--extra-ext", ".js"]'
+          working_directory: './src'
