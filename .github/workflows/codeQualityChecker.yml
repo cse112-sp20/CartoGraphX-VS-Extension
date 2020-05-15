@@ -8,7 +8,7 @@ inputs:
       Specify files or directories
       (Multiple files or directories can be specified by separating them with line feed)
     required: false
-  options: ["--extra-ext", ".js"]
+  options: 
     description: |
       Changes `jshint` command line options.
       Specify the options in JSON array format.
