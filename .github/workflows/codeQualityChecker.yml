@@ -3,7 +3,7 @@ on:
   push:
     branch: [build/codeQuality]
 inputs:
-  files: ./src/main.ts
+  files: [./src/main.ts]
     description: |
       Specify files or directories
       (Multiple files or directories can be specified by separating them with line feed)
@@ -14,7 +14,7 @@ inputs:
       Specify the options in JSON array format.
       e.g.: '["--extra-ext", ".js"]'
     required: false
-  working_directory: ./src
+  working_directory: [./src]
     description: Changes the current working directory of the Node.js process
     required: false
 jobs:
