@@ -8,13 +8,18 @@ import { firebaseConfig} from './config';
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-
+/**
+ * This function is called when the extension is activated
+ * 
+ * @param  {vscode.ExtensionContext} context
+ */
 export function activate(context: vscode.ExtensionContext) {
 	console.log('ChartGraphX is now active!');
 	statusBarItem.show();
 
+
+	/** This command displays a quickpick in the IDE window that allows the user to choose between available commands */
 	let disposable = vscode.commands.registerCommand('chartGraphX.toolbarAction', async () => {
-		// shows quickpick with available commands depending on user is signed in or not
 		if (auth.currentUser !== null){
 			vscode.window.showQuickPick(
 				[
@@ -37,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}	
 	});
 
-	// runs each time auth changes (login/logout)
+	/** Adds an observer for changes to the user's sign-in state. (login/logout) */ 
 	auth.onAuthStateChanged(firebaseUser => {
 		if (firebaseUser === null) {statusBarItem.color = "darkgrey";}
 		else {statusBarItem.color = 'white';}
@@ -48,5 +53,5 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 
-// this method is called when your extension is deactivated
+/** this method is called when your extension is deactivated */ 
 export function deactivate() {}
