@@ -28,7 +28,7 @@
 		"lint": "eslint src --ext ts",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
-		"test": "node ./out/test/runTest.js"
+		"unit-test": "./node_modules/.bin/jest"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
@@ -39,6 +39,7 @@
 		"@typescript-eslint/parser": "^2.30.0",
 		"eslint": "^6.8.0",
 		"glob": "^7.1.6",
+		"jest": "^26.0.1",
 		"mocha": "^7.1.2",
 		"ts-sinon": "^1.2.0",
 		"typescript": "^3.8.3",
@@ -79,6 +80,7 @@
 		]
 	},
 	"dependencies": {
+		"@types/jest": "^25.2.2",
 		"firebase": "^7.14.3",
 		"sinon": "^9.0.2"
 	}
