@@ -2,8 +2,8 @@
 
 name: Release and Publish
 on:
-    repository_dispatch:
-        types: passed-tests
+    push:
+        branches: master
 jobs:
     #build:
     #    name: Deploy to Firebase
