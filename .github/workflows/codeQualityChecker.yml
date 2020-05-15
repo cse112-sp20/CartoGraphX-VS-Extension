@@ -1,23 +1,9 @@
 name: Analyze code statically
-"on": [pull_request, push]
+"on": pull_request
 jobs:
-  misspell:
+  jshint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Analyze code statically using misspell
-        uses: moneyforward/misspell-action@v0
-        with:
-          files: |
-            .
-            !./.git/
-            !./dist/
-  eslint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Analyze code statically using ESLint
-        uses: moneyforward/eslint-action@v0
-        with:
-          files: '.'
-          options: '["--ext", ".ts"]'
+      - name: Analyze code statically using JSHint
+        uses: moneyforward/jshint-action@v0
