@@ -1,8 +1,5 @@
 name: Analyze code statically
-"on": pull_request
-on : 
-  push:
-    branch: [build/codeQuality]
+"on": pull_request | push
 jobs:
   jshint:
     runs-on: ubuntu-latest
