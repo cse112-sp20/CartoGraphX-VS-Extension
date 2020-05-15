@@ -1,5 +1,13 @@
 name: Analyze code statically
-"on": pull_request | push
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the master branch
+  push:
+    branches:
+      - build/codeQuality
+  pull_request:
+    branches:
+      - master
 jobs:
   jshint:
     runs-on: ubuntu-latest
