@@ -50,17 +50,3 @@ export function activate(context: vscode.ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
-
-
-
-
-
-
-
-
-/*
-	// authentication commands
-	let signin = vscode.commands.registerCommand('chartGraphX.signIn', () => signIn(auth));
-	let signout = vscode.commands.registerCommand('chartGraphX.signOut', () => signOut(auth));
-	let checkAuthState = vscode.commands.registerCommand('chartGraphX.checkAuthState', () => console.log(auth.currentUser));
-*/ 
