@@ -6,7 +6,7 @@ import * as vscode from 'vscode'
 
 /**
  *  A class that contains the root of the document tree as well as data that
- *  that pertains to the structure of the workspace *(more to come).
+ *  that pertains to the structure of the workspace (more to come).
  */
 class VSCodeMetrics {
     private root: VSFolder; // Contains the doc root of the project. All paths extend from root. 
@@ -22,6 +22,10 @@ class VSCodeMetrics {
     }
 };
 
+/**
+ * A class that contains information about the folders in 
+ * the workspace.  
+ */
 class VSFolder {
     private name: string; // Contains the name of the folder. 
     private folders: VSFolder[] // Contains the other folders inside the current folder. 
@@ -29,6 +33,9 @@ class VSFolder {
     private numFolders: number; // Contains the number of folders inside the current folder.
     private numFiles: number; // Contains the number of files inside the folder.
 
+    /**
+     * @param name Contains the name of the folder. 
+     */
     constructor(name: string) {
         this.name = name;
         this.folders = [];
@@ -40,11 +47,18 @@ class VSFolder {
     
 };
 
+/**
+ * A class that contains information about the files in 
+ * the workspace.  
+ */
 class VSFile {
     private name: string; // Contains the name of the file. 
     private lines: number; // Contains the number of lines for the file. 
     private hasChanged: boolean; // True when the file has changed since the last update. False otherwise.
 
+    /**
+    * @param name Contains the name of the file. 
+    */
     constructor(name:string) {
         this.name = name;
         this.lines = 0;
