@@ -12,13 +12,15 @@ To run the extension you have clone the repo and open the extension folder in VS
 ``npm i``  
 ``code .``    
 
-Then, press F5 to open a new window with your extension loaded.
-Open one of your workspaces.
+Then, press F5 to open a new window with your extension loaded.  
+Open one of your workspaces.  
 Run the extension command by pressing the CGphX button on your status bar (bottom bar). 
 
 ## Features
 
-Display current open file in editor and the number of lines in this file.
+To view the extension commands, press the CGphX button on your status bar (bottom bar). This will prompt a dropdown menu in your IDE providing you with the available commands.  
+
+ChartGraphX provides commands to sign up/in/out of the service. When signed in, you have the ability to check user credentials, as well as running the displayCurrentWorkingFile() command.
 
 ## Requirements
 

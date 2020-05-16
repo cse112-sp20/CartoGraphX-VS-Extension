@@ -10,7 +10,7 @@ jobs:
     name: Running Tests with npm
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
@@ -20,6 +20,8 @@ jobs:
       with:
         node-version: 10.x
     - run: npm install
+    - run: echo `sed 's/API_KEY/${{ secrets.FIREBASE_KEY }}/' src/config.ts` > src/config.ts
+    - run: npm run compile
     - name: Run tests
       uses: GabrielBB/xvfb-action@v1.0
       with:
