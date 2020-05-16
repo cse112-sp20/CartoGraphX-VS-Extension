@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
 import * as vscode from 'vscode';
+import {sendClientData} from './vsmetrics/sendmetrics';
 
 
 
@@ -31,7 +32,10 @@ export const signIn = async (auth: firebase.auth.Auth) => {
 export const signOut = (auth: firebase.auth.Auth) => {
     console.log('signing out...');
     auth.signOut()
-        .then( res => vscode.window.showInformationMessage('You are now signed out of ChartGraphX!'))
+        .then( res => {
+                clearInterval(sendClientData);
+                vscode.window.showInformationMessage('You are now signed out of ChartGraphX!');
+        })
         .catch(function(error: { code: string; message: string; }) {
             vscode.window.showWarningMessage(error.message);
     });
