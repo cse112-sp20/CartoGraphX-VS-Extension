@@ -17,8 +17,8 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "chartGraphX.displayState",
-				"title": "Display State"
+				"command": "chartGraphX.toolbarAction",
+				"title": "Display CGphX Commands"
 			}
 		]
 	},
@@ -79,5 +79,7 @@
 			"@semantic-release/release-notes-generator"
 		]
 	},
-	"dependencies": {}
+	"dependencies": {
+		"firebase": "^7.14.3"
+	}
 }
