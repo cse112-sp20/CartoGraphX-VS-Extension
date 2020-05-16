@@ -24,7 +24,6 @@ test("Extension test", () =>{
 	test('Extension test', () => {
 		// TODO:
 		// do testing for extension such like given tester file, extenion output need to match the expected # of lines for file.
-
 		// do testing for extension such like given tester file, extension must outputs the correct file name
 	});
-});
+
