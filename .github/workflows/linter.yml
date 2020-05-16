@@ -1,0 +1,25 @@
+  
+# Github action that will lint ts files using eslint
+
+name: ESLint
+on:
+    push:
+  
+jobs:
+    eslint:
+        name: eslint
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: actions/checkout@v1
+        -   name: install node v12
+            uses: actions/setup-node@v1
+            with:
+                node-version: 12
+        -   name: install eslint
+            run: npm i eslint@latest --save-dev
+        -   name: install jsdoc plugin
+            run: npm i eslint-plugin-jsdoc@latest --save-dev
+        -   name: yarn install
+            run: yarn install
+        -   name: eslint
+            uses: icrawl/action-eslint@v1
