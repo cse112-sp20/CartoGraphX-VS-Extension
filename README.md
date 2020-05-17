@@ -1,7 +1,5 @@
 # ChartGraphX VS Code extension
 
-![vs code view](/readme.img/ChartGraphX_VS_code_view.png)
-
 This is the VS code extension used to track the data needed for the Interactive source code map displayed on our website. 
 
 ## Running the extension

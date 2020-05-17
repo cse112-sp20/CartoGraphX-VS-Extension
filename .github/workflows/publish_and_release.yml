@@ -16,9 +16,10 @@ jobs:
     #        with:
     #            firebase-token: 1//0fowuyNuqjreWCgYIARAAGA8SNwF-L9IrWiWUAxQNwCC3TuV6ntVxZ4iHMznorz6NKiL3p-mty73EdQvNbk3uxjtwCLWTHU9K0Wo
     release:
-        name: Release
+        name: Release and Publish
         runs-on: ubuntu-18.04
         steps:
+        -   run: echo `sed 's/API_KEY/${{ secrets.FIREBASE_KEY }}/' src/config.ts` > src/config.ts
         -   name: Checkout
             uses: actions/checkout@v2
         -   name: Setup Node.js
