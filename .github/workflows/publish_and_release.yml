@@ -19,7 +19,6 @@ jobs:
         name: Release and Publish
         runs-on: ubuntu-18.04
         steps:
-        -   run: echo `sed 's/API_KEY/${{ secrets.FIREBASE_KEY }}/' src/config.ts` > src/config.ts
         -   name: Checkout
             uses: actions/checkout@v2
         -   name: Setup Node.js
