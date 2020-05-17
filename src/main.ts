@@ -4,10 +4,33 @@ import * as vscode from "vscode";
 import { signIn, signOut, userStatus} from "./auth";
 import {displayCurrentWorkingFile, statusBarItem} from "./chartgraphx";
 import { firebaseConfig} from "./config";
+import * as simpleGit from "simple-git/promise";
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+
+
+// Set the global variable gitRoot to the root of the Git repository
+export let gitRoot : string = "";
+export let vscodeRoot :string | undefined = vscode.workspace.rootPath;
+export let git : any = simpleGit(vscodeRoot);
+/**
+ * This function finds the Git root if the folder open in vscode is in a Git repository.
+ */
+async function findGitRoot() {
+    try {
+        gitRoot = await git.revparse(['--show-toplevel']);
+    } catch(err) {
+        vscode.window.showErrorMessage('Error: The current root folder is not in a Git repository!');
+        gitRoot = "";
+    }
+    if (gitRoot !== "") {
+        vscode.window.showInformationMessage('The Git root directory is "' + gitRoot + '".');
+    }
+}
+findGitRoot();
+
 
 /**
  * This function is called when the extension is activated
