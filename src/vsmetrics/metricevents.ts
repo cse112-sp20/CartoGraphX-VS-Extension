@@ -15,13 +15,12 @@ function createFilesListener() {
     
         filesCreated.forEach((fUri) => {
 
+            // Make sure that the uri is not undefined. 
             if(fUri !== undefined) {
-                // Get the file type and add uri to the appropriate list.
-                let fileType : vscode.FileType = vscode.FileType.File; // Default to file.
     
-                // Grab the file type and use it
+                // Grab the file type, and add the new file or folder.  
                 vscode.workspace.fs.stat(fUri).then((fileStat) => {
-                    fileType = fileStat.type;
+                    let fileType = fileStat.type;
 
                     if(fileType === vscode.FileType.File) {
 
@@ -39,7 +38,6 @@ function createFilesListener() {
                         if(docs.hasDeletedFile(fUri)) {
                             docs.delDeletedFile(fUri);
                         }
-
                         
                         // Create an instance of a text document for the fileUri (gets the file name and line count)
                         vscode.workspace.openTextDocument(fUri).then(doc => {
@@ -70,10 +68,11 @@ function createFilesListener() {
                             docs.delDeletedFolder(fUri);
                         }
 
+                        // Get the folder name. 
                         let folderNameUri = fUri.toString().split("/");
                         let folderName = folderNameUri[folderNameUri.length - 1];
 
-                        if(fUri.toString() == "/" || fUri.toString() == "~/") {
+                        if(fUri.toString() === "/" || fUri.toString() === "~/") {
                             folderName = fUri.toString();
                         }
 
@@ -85,10 +84,11 @@ function createFilesListener() {
                         }
 
                         let folder = new VSFolder(folderName, fUri, true, fileType);
+
+                        docs.addCreatedFolder(fUri, folder);
                     }                 
                 });      
-            }
-              
+            }              
         });
     });
 }

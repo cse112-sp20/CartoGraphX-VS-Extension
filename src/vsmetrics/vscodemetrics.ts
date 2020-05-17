@@ -153,7 +153,7 @@ export class VSFile {
     private fileUri    : vscode.Uri;
     private created    : boolean;
     private lines      : number;
-    private fileType : vscode.FileType;
+    private fileType   : vscode.FileType;
 
 
     constructor(fileName : string, fileUri : vscode.Uri, created : boolean,  lines : number, fileType : vscode.FileType) {

@@ -3,13 +3,15 @@ import {displayCurrentWorkingFile, statusBarItem} from './chartgraphx';
 import * as firebase from 'firebase';
 import { signIn, signOut, userStatus, signUp} from './auth'; 
 import { firebaseConfig} from './config';
-import {VSCodeMetrics} from './vsmetrics/vscodemetrics'
-import {VSFolder} from './vsmetrics/vscodemetrics'
-import {VSFile} from './vsmetrics/vscodemetrics'
+import {VSMetrics} from './vsmetrics/vscodemetrics';
+import {sendClientData} from './vsmetrics/sendmetrics';
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+
+// Contains the list of documents for the user. 
+export let docs : VSMetrics = new VSMetrics();
 
 /**
  * This function is called when the extension is activated
@@ -53,12 +55,13 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	
 	context.subscriptions.push(disposable);
+
+	function send () {
+		sendClientData;
+	}
 }
 
-let name = vscode.workspace.name;
-//let folders = vscode.workspace.getWorkspaceFolder();
-let folders = new VSFolder("\ChartGraphX-VS-code-extension-MVP");
-let docTree = new VSCodeMetrics(folders, "\ChartGraphX-VS-code-extension-MVP");
+
 
 
 /** this method is called when your extension is deactivated */ 
