@@ -4,10 +4,28 @@ import * as vscode from "vscode";
 import { signIn, signOut, userStatus} from "./auth";
 import {displayCurrentWorkingFile, statusBarItem} from "./chartgraphx";
 import { firebaseConfig} from "./config";
+import { GitExtension } from "./git";
+import * as simpleGit from "simple-git/promise";
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+
+
+async function testGit() {
+    const git = simpleGit();
+    const gitlog = await git.log();
+    console.log(gitlog);
+}
+
+const gitExtension = vscode.extensions.getExtension<GitExtension>('vscode.git')!.exports;
+const gitAPI = gitExtension.getAPI(1);
+const vscodeRoot = vscode.workspace.rootPath;
+const repository = gitAPI.repositories;
+console.log(vscodeRoot);
+console.log(repository);
+
+testGit();
 
 /**
  * This function is called when the extension is activated
