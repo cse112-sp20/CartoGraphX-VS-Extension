@@ -9,10 +9,18 @@
 
 
  // TODO: Function to send data to FB. 
- export let sendClientData = window.setInterval(function() {
+ export let sendClientData : NodeJS.Timeout = setInterval(function() {
     // Convert data in lists to JSON.
 
-    // Send it over to Firebase. 
+    // let req = new XMLHttpRequest();
+
+    // req.open('POST', 'https://enfw61sffu585.x.pipedream.net', true);
+
+    // let payload : JSON = {};
+
+    // // Send it over to Firebase. 
+
+    // req.send(payload);
  
 }, 60000 * numMin);
 

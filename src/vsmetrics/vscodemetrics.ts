@@ -148,6 +148,9 @@ export class VSMetrics {
     
 }
 
+/**
+ * Holds the information about the file in VS Code. 
+ */
 export class VSFile {
     private fileName   : string;
     private fileUri    : vscode.Uri;
@@ -167,8 +170,15 @@ export class VSFile {
     getFileName = () : string => {
         return this.fileName;
     };
+
+    printFile = () : void => {
+        vscode.window.showInformationMessage(this.fileName + '\n' + this.created + '\n' + this.lines + '\n' + this.fileType);
+    };
 };
 
+/**
+ * Holds the information about the folder in VS Code. 
+ */
 export class VSFolder {
     private folderName   : string;
     private folderUri    : vscode.Uri;
