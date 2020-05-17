@@ -4,8 +4,8 @@ name: Test Coverage checker
 on: push
 jobs:
     codecov: 
-        name: Publish to Codecov
-        runs-on: ubuntu-latest
+        name: Run Coverage Checker/Publish to Codecov
+        runs-on: macos-latest
         steps:
         -   uses: actions/checkout@v1
         -   name: Install Node.js
@@ -13,9 +13,13 @@ jobs:
             with:
                 node-version: '10.x'
         -   run: npm install
-        -   name: download and run istanbul
-            run: npx nyc@15.0.1 --reporter=text --reporter=html mocha
+        -   run: echo `sed 's/API_KEY/${{ secrets.FIREBASE_KEY }}/' src/config.ts` > src/config.ts
+        -   run: npm run compile
+        -   name: run tests w/ coverage
+            run: npm run unit-test
         -   name: send to Codecov
             uses: codecov/codecov-action@v1
             with:
                 token: ${{ secrets.CODECOV_TOKEN }}
+                file: coverage/coverage.json
+                flags: unittests
