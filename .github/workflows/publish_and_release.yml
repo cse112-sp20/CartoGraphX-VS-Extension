@@ -5,16 +5,6 @@ on:
     push:
         branches: master
 jobs:
-    #build:
-    #    name: Deploy to Firebase
-    #    runs-on: ubuntu-latest
-    #    steps:
-    #    -   uses: actions/checkout@v1
-    #        with:
-    #            submodules: true
-    #    -   uses: ryank90/action-hugo-firebase-deploy@master
-    #        with:
-    #            firebase-token: 1//0fowuyNuqjreWCgYIARAAGA8SNwF-L9IrWiWUAxQNwCC3TuV6ntVxZ4iHMznorz6NKiL3p-mty73EdQvNbk3uxjtwCLWTHU9K0Wo
     release:
         name: Release and Publish
         runs-on: ubuntu-18.04
