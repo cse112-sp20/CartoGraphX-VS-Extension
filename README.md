@@ -1,6 +1,6 @@
 # ChartGraphX VS Code extension
 
-The ChartGraphX VS Code extension is used to track and share user-metrics inside a team workspace to be viewed on the interactive source-code map displayed on our website. This tool will greatly increase accountability because each developer’s work will be visible in real time.
+This is the VS code extension used to track the data needed for the Interactive source code map displayed on our website. 
 
 ## Running the extension
 
