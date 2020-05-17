@@ -5,6 +5,7 @@ import { signIn, signOut, userStatus, signUp} from './auth';
 import { firebaseConfig} from './config';
 import {VSMetrics} from './vsmetrics/vscodemetrics';
 import {sendClientData} from './vsmetrics/sendmetrics';
+import {createFileListener} from './vsmetrics/metricevents';
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -12,6 +13,11 @@ const auth = firebase.auth();
 
 // Contains the list of documents for the user. 
 export let docs : VSMetrics = new VSMetrics();
+
+// Contains the user info.
+export let user : any =  {
+	"email" : ""
+};
 
 /**
  * This function is called when the extension is activated
@@ -56,9 +62,13 @@ export function activate(context: vscode.ExtensionContext) {
 	
 	context.subscriptions.push(disposable);
 
-	function send () {
-		sendClientData;
-	}
+	// function send () {
+	// 	sendClientData;
+	// }
+
+
+	createFileListener();
+
 }
 
 

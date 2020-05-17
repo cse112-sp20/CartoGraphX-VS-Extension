@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
 import * as vscode from 'vscode';
 import {sendClientData} from './vsmetrics/sendmetrics';
+import {user} from './main';
 
 
 
@@ -62,8 +63,11 @@ export const signUp = async (auth: firebase.auth.Auth) => {
     const email = await vscode.window.showInputBox({placeHolder: 'email'});
     const password = await vscode.window.showInputBox({placeHolder: 'password', password: true}); // 'testPassword'
     auth.createUserWithEmailAndPassword(email !== undefined ? email: '', password !== undefined ? password: '') 
-        .then( res => vscode.window.showInformationMessage('The user '+auth.currentUser?.email + " has been created!"))
-        .catch(function(error: { code: any; message: any; }) {
+        .then( res => {
+            user["email"] = auth.currentUser?.email;
+            vscode.window.showInformationMessage('The user '+auth.currentUser?.email + " has been created!");
+        })
+        .catch(function(error: { code: any, message: any }) {
             vscode.window.showWarningMessage(error.message);
         }
     );
