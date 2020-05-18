@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import * as firebase from "firebase";
 import * as vscode from "vscode";
 
@@ -16,10 +17,36 @@ export const signIn = async (auth: firebase.auth.Auth) => {
         .catch((error: { code: any; message: any; }) => {
             vscode.window.showWarningMessage(error.message);
         },
+=======
+import * as firebase from 'firebase';
+import * as vscode from 'vscode';
+import {sendClientData} from './vsmetrics/sendmetrics';
+import {user} from './main';
+
+
+
+
+/**
+ * This function will let the user sign in by providing email and password. 
+ * This function sets auth.currentUser
+ * 
+ * @param  {firebase.auth.Auth} auth
+ */
+export const signIn = async (auth: firebase.auth.Auth) => {
+    console.log('signing in...');
+    const email = await vscode.window.showInputBox({placeHolder: 'email'});
+    const password = await vscode.window.showInputBox({placeHolder: 'password', password: true}); // 'testPassword'
+    auth.signInWithEmailAndPassword(email !== undefined ? email: '', password !== undefined ? password: '') 
+        .then( res => vscode.window.showInformationMessage('You are now signed to ChartGraphX as: '+auth.currentUser?.email))
+        .catch(function(error: { code: any; message: any; }) {
+            vscode.window.showWarningMessage(error.message);
+        }
+>>>>>>> 4e99e3189df9c03c9c31bb854fa090fcc5fb3fc8
     );
 };
 
 /**
+<<<<<<< HEAD
  * This function will sign the user out.
  * This will make firebase.auth.currentUser == null
  *
@@ -29,12 +56,28 @@ export const signOut = (auth: firebase.auth.Auth) => {
     auth.signOut()
         .then( (res) => vscode.window.showInformationMessage("You are now signed out of ChartGraphX!"))
         .catch((error: { code: string; message: string; }) => {
+=======
+ * This function will sign the user out. 
+ * This will make firebase.auth.currentUser == null
+ * 
+ * @param  {firebase.auth.Auth} auth
+ */
+export const signOut = (auth: firebase.auth.Auth) => {
+    console.log('signing out...');
+    auth.signOut()
+        .then( res => {
+                clearInterval(sendClientData);
+                vscode.window.showInformationMessage('You are now signed out of ChartGraphX!');
+        })
+        .catch(function(error: { code: string; message: string; }) {
+>>>>>>> 4e99e3189df9c03c9c31bb854fa090fcc5fb3fc8
             vscode.window.showWarningMessage(error.message);
     });
 };
 
 /**
  * This function displays the email of the auth.currentUser object in a vscode information window
+<<<<<<< HEAD
  *
  * @param  {firebase.auth.Auth} auth
  */
@@ -59,5 +102,33 @@ export const signUp = async (auth: firebase.auth.Auth) => {
         .catch((error: { code: any; message: any; }) => {
             vscode.window.showWarningMessage(error.message);
         },
+=======
+ * 
+ * @param  {firebase.auth.Auth} auth
+ */
+export const userStatus = (auth: firebase.auth.Auth) => {
+    const userEmail = auth.currentUser !== null ? auth.currentUser.email: ''; 
+    vscode.window.showInformationMessage(userEmail !== null? ('Signed in as: '+userEmail): 'You are not signed in..' );
+};
+
+/**
+ * This function will let the user sign up by providing email and password. 
+ * This function sets auth.currentUser
+ * 
+ * @param  {firebase.auth.Auth} auth
+ */
+export const signUp = async (auth: firebase.auth.Auth) => {
+    console.log('creating account...');
+    const email = await vscode.window.showInputBox({placeHolder: 'email'});
+    const password = await vscode.window.showInputBox({placeHolder: 'password', password: true}); // 'testPassword'
+    auth.createUserWithEmailAndPassword(email !== undefined ? email: '', password !== undefined ? password: '') 
+        .then( res => {
+            user["email"] = auth.currentUser?.email;
+            vscode.window.showInformationMessage('The user '+auth.currentUser?.email + " has been created!");
+        })
+        .catch(function(error: { code: any, message: any }) {
+            vscode.window.showWarningMessage(error.message);
+        }
+>>>>>>> 4e99e3189df9c03c9c31bb854fa090fcc5fb3fc8
     );
 };
