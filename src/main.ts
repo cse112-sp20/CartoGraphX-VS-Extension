@@ -3,21 +3,21 @@ import {displayCurrentWorkingFile, statusBarItem} from './chartgraphx';
 import * as firebase from 'firebase';
 import { signIn, signOut, userStatus, signUp} from './auth'; 
 import { firebaseConfig} from './config';
-import {VSMetrics} from './vsmetrics/vscodemetrics';
-import {sendClientData} from './vsmetrics/sendmetrics';
-import {createFileListener} from './vsmetrics/metricevents';
+import {VSMetrics, VSFile} from './vsmetrics/vscodemetrics';
+import {sendData} from './vsmetrics/sendmetrics';
+import {listen} from './vsmetrics/metricevents';
+import { XMLHttpRequest } from 'xmlhttprequest-ts';
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+export const auth = firebase.auth();
 
 // Contains the list of documents for the user. 
 export let docs : VSMetrics = new VSMetrics();
 
-// Contains the user info.
-export let user : any =  {
-	"email" : ""
-};
+// Define the number of minutes it takes to update. 
+let numMin = 1;
+
 
 /**
  * This function is called when the extension is activated
@@ -62,17 +62,14 @@ export function activate(context: vscode.ExtensionContext) {
 	
 	context.subscriptions.push(disposable);
 
-	// function send () {
-	// 	sendClientData;
-	// }
+	// Listen for file changes. 
+	listen();
 
-
-	createFileListener();
+	// Send the client data every numMin minutes.
+	setInterval(sendData, 60000 * numMin);
+	
 
 }
-
-
-
 
 /** this method is called when your extension is deactivated */ 
 export function deactivate() {}

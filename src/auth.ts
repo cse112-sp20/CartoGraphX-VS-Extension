@@ -1,10 +1,5 @@
 import * as firebase from 'firebase';
 import * as vscode from 'vscode';
-import {sendClientData} from './vsmetrics/sendmetrics';
-import {user} from './main';
-
-
-
 
 /**
  * This function will let the user sign in by providing email and password. 
@@ -33,10 +28,7 @@ export const signIn = async (auth: firebase.auth.Auth) => {
 export const signOut = (auth: firebase.auth.Auth) => {
     console.log('signing out...');
     auth.signOut()
-        .then( res => {
-                clearInterval(sendClientData);
-                vscode.window.showInformationMessage('You are now signed out of ChartGraphX!');
-        })
+        .then( res => { vscode.window.showInformationMessage('You are now signed out of ChartGraphX!')})
         .catch(function(error: { code: string; message: string; }) {
             vscode.window.showWarningMessage(error.message);
     });
@@ -63,10 +55,7 @@ export const signUp = async (auth: firebase.auth.Auth) => {
     const email = await vscode.window.showInputBox({placeHolder: 'email'});
     const password = await vscode.window.showInputBox({placeHolder: 'password', password: true}); // 'testPassword'
     auth.createUserWithEmailAndPassword(email !== undefined ? email: '', password !== undefined ? password: '') 
-        .then( res => {
-            user["email"] = auth.currentUser?.email;
-            vscode.window.showInformationMessage('The user '+auth.currentUser?.email + " has been created!");
-        })
+        .then( res => vscode.window.showInformationMessage('The user '+auth.currentUser?.email + " has been created!"))
         .catch(function(error: { code: any, message: any }) {
             vscode.window.showWarningMessage(error.message);
         }

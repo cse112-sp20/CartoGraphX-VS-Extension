@@ -16,6 +16,7 @@ export class VSMetrics {
     private modifiedFolders : Map<vscode.Uri, VSFolder>;
     private deletedFolders : Map<vscode.Uri, VSFolder>;
 
+    private currFilePath : string;
 
     constructor() {
         this.createdFiles = new Map();
@@ -24,7 +25,22 @@ export class VSMetrics {
         this.createdFolders = new Map();
         this.modifiedFolders = new Map();
         this.deletedFolders = new Map();
+        this.currFilePath = "";
     }
+
+    /**
+     * Sets the file path the user is currently working in. 
+     */
+    setCurrFilePath = (currFilePath : string) => {
+        this.currFilePath = currFilePath;
+    };
+
+    /**
+     * Gets the file path the user is currently working in. 
+     */
+    getCurrFilePath = () => {
+        return this.currFilePath;
+    };
 
     /**
      * Adds an element to each of the lists:
@@ -145,6 +161,33 @@ export class VSMetrics {
         return this.deletedFolders.delete(folderUri);
     }; 
 
+    /**
+     * Gets the data fields. 
+     */
+    getCreatedFilesMap = () => {
+        return this.createdFiles;
+    };
+
+    getModifiedFilesMap = () => {
+        return this.modifiedFiles;
+    };
+
+    getDeletedFilesMap = () => {
+        return this.deletedFiles;
+    };
+
+    getCreatedFoldersMap = () => {
+        return this.createdFolders;
+    };
+    
+    getModifiedFoldersMap = () => {
+        return this.modifiedFolders;
+    };
+
+    getDeletedFoldersMap = () => {
+        return this.deletedFolders;
+    };
+
     
 }
 
@@ -174,6 +217,14 @@ export class VSFile {
     printFile = () : void => {
         vscode.window.showInformationMessage(this.fileName + '\n' + this.created + '\n' + this.lines + '\n' + this.fileType);
     };
+
+    getFilePath = () : string => {
+        return this.fileUri.fsPath;
+    };
+
+    getNumLines = () : number => {
+        return this.lines;
+    };
 };
 
 /**
@@ -192,4 +243,13 @@ export class VSFolder {
         this.created = created;
         this.fileType = fileType;
     }
+
+    getFolderPath = () : string => {
+        return this.folderUri.fsPath;
+    };
+    getFolderName = () : string => {
+        return this.folderName;
+    };
+
+
 };
