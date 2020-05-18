@@ -132,83 +132,40 @@ export function deleteFileListener() {
 
 /**
  * Event listener that keeps track of when a new folder is created. 
- * Adds the new folder into the respected created list. 
+ * Adds the new folder into the respected created list.
+ * 
+ * Using this method with deleteFileListener() is probably bad.
  */
-export function FoldersListener() {
-    // Loop through the created files. 
-    vscode.workspace.onDidChangeWorkspaceFolders((folderCreateEvent : vscode.WorkspaceFoldersChangeEvent) => {
-        let addedFolders = folderCreateEvent.added;
-        let deletedFolders = folderCreateEvent.removed;
-    
-        // Handle created folders:
-        addedFolders.forEach((folder) => {
+export function createFoldersListener() {
+    let fileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*', /* ignoreCreate */ false, /* ignoreChange */ true, /* ignoreDelete */ false);
 
-            // Make sure that the folder is not undefined. 
-            if(folder !== undefined) {
-
-                    let folderUri = folder.uri;
-    
-                    // Delete the uri file from the lists if they exist. 
-                    if(docs.hasCreatedFolder(folderUri)) {
-                        docs.delCreatedFolder(folderUri);
-                    }
-
-                    if(docs.hasModifiedFolder(folderUri)) {
-                        docs.delModifiedFolder(folderUri);
-                    }
-
-                    if(docs.hasDeletedFolder(folderUri)) {
-                        docs.delDeletedFolder(folderUri);
-                    }
-
-                    // Get the folder name. 
-                    let vsFolderNameArr = folder.name.split("\\");
-
-                    let vsFolderName = vsFolderNameArr[vsFolderNameArr.length - 1];
-
-                    let vsFolder = new VSFolder(vsFolderName, folderUri, true, vscode.FileType.Directory);
-                    
-                    // Add the created folder to the created folder list.
-                    docs.addCreatedFolder(folderUri, vsFolder);
-            }
-        });
-        
-        // Handle delted folders:
-        deletedFolders.forEach((folder) => {
-
-            // Make sure that the folder is not undefined. 
-            if(folder !== undefined) {
-
-                let folderUri = folder.uri;
-
-                // Delete the uri file from the lists if they exist. 
-                if(docs.hasCreatedFolder(folderUri)) {
-                    docs.delCreatedFolder(folderUri);
-                }
-
-                if(docs.hasModifiedFolder(folderUri)) {
-                    docs.delModifiedFolder(folderUri);
-                }
-
-                if(docs.hasDeletedFolder(folderUri)) {
-                    docs.delDeletedFolder(folderUri);
-                }
-
-                // Get the folder name. 
-
-                let vsFolderNameArr = folder.name.split("\\");
-
-                let vsFolderName = vsFolderNameArr[vsFolderNameArr.length - 1];
-
-                let vsFolder = new VSFolder(vsFolderName, folderUri, false, vscode.FileType.Directory);
-                
-                // Add the delted folder to the deleted folder list. 
-                docs.addDeletedFolder(folderUri, vsFolder);
+    fileSystemWatcher.onDidCreate((createdFileUri : vscode.Uri) => {
+        vscode.workspace.fs.stat(createdFileUri).then((fileStat : vscode.FileStat) => {
+            // Right now we only care about directories in this method.
+            if(fileStat.type != vscode.FileType.Directory){
+                return;
             }
 
-        });
+            removeDirectoryFromMaps(createdFileUri);
+            
+            let createdFolderName = getNameFromFileSystemPath(createdFileUri.fsPath);
+            let createdFolder     = new VSFolder(createdFolderName, createdFileUri, true, vscode.FileType.Directory);
 
+            docs.addCreatedFolder(createdFileUri, createdFolder);
+        })
     });
+
+    fileSystemWatcher.onDidDelete((deletedFileUri : vscode.Uri) => {
+        // Since this file doesn't exist anymore, then we can't tell if it's a directory or a file.
+        // We'll just guess? ¯\_(ツ)_/¯
+
+        removeDirectoryFromMaps(deletedFileUri);
+
+        let deletedFolderName = getNameFromFileSystemPath(deletedFileUri.fsPath);
+        let deletedFolder     = new VSFolder(deletedFolderName, deletedFileUri, false, vscode.FileType.Directory);
+
+        docs.addDeletedFolder(deletedFileUri, deletedFolder);
+    })
 }
 
 /**
