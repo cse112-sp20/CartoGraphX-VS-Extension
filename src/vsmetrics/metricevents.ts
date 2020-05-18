@@ -160,6 +160,7 @@ export function createFoldersListener() {
         // We'll just guess? ¯\_(ツ)_/¯
 
         removeDirectoryFromMaps(deletedFileUri);
+        removeFileFromMaps(deletedFileUri);
 
         let deletedFolderName = getNameFromFileSystemPath(deletedFileUri.fsPath);
         let deletedFolder     = new VSFolder(deletedFolderName, deletedFileUri, false, vscode.FileType.Directory);
