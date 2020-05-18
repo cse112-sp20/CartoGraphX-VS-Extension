@@ -1,5 +1,5 @@
 /** 
- *  @fileOverview Implements the event listeners to detect changes to local project.
+ *  @fileOverview Contains all of the event listeners that store the data in the VSCodeMetrics data structures. 
  *
  *  @author       Jack    Rose
  *  @author       Jackson Tuxhorn
@@ -7,11 +7,9 @@
  *  @requires     // I don't really know 
  */
 
-
 import * as vscode from 'vscode';
 import {VSFolder, VSFile} from './vscodemetrics';
 import {docs} from '../main';
-import { rename } from 'fs';
 
 /**
  * Event listener that keeps track of when a new file is created. 
@@ -246,12 +244,11 @@ export function changeTextDocumentListener() {
     });
 }
 
-
 /**
  * Creates an event listener that detects changes to directory / file names
  * and updates the doc file / directory modified maps.
  * 
- * *** THE LAST TIME THE FUNCTION CALLED AN UPDATE IT WILL HAVE oldUri ***
+ * ***              THE LAST TIME THE FUNCTION CALLED AN UPDATE IT WILL HAVE oldUri                ***
  * *** IF WE WANT TO ACCESS THE FILE NOW WE HAVE TO USE newUri, AS IT'S REFLECTS CURRENT FILE NAME ***
  */
 export function createFileOrFolderRenamedListener(){
@@ -278,8 +275,7 @@ export function createFileOrFolderRenamedListener(){
                         // Prepare updated info for storage in map.
                         let newName     = getNameFromFileSystemPath(file['newUri'].fsPath);
                         let updatedFile = new VSFile(newName, file['newUri'], false, openedFile.lineCount, vscode.FileType.File);
-    
-    
+
                         // The database will still have the old path to the directory, so we send oldUri
                         docs.addModifiedFile(file['oldUri'], updatedFile)
                     });
