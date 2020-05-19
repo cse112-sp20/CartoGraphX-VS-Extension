@@ -3,3 +3,4 @@ node_modules
 .vscode-test/
 *.vsix
 src/config.ts
+cloud_functions/functions/serviceAccount.json
