@@ -2,7 +2,7 @@
 import * as firebase from "firebase";
 import * as vscode from "vscode";
 import { signIn, signOut, userStatus, signUp} from "./auth";
-import { displayCurrentWorkingFile, statusBarItem } from "./chartgraphx";
+import { displayCurrentWorkingFile, statusBarItem, createMapFunction } from "./chartgraphx";
 import { firebaseConfig } from "./config";
 import { currentDocumentListener } from "./events";
 import { fetchRemoteGit, findGitFileLines, findGitFiles, findGitRoot, findGitUrl, gitRoot, sendGitData } from "./git";
@@ -34,7 +34,9 @@ export function activate(context: vscode.ExtensionContext) {
                 [
                     { label: "Display Current Working File", undefined, target: displayCurrentWorkingFile },
                     { label: "Get user info", undefined, target: userStatus },
-                    { label: "Sign out", description: "Stop ChartGraphX tracking", target: signOut }
+                    { label: "Sign out", description: "Stop ChartGraphX tracking", target: signOut },
+                    { label: "Display Current Working File", undefined, target: displayCurrentWorkingFile },
+                    { label: "Create map", descrition: "Create a map", undefined, target: createMapFunction}
                 ],
                 { placeHolder: "ChartGraphX commands" }
             ).then( (method) => {
@@ -61,15 +63,15 @@ export function activate(context: vscode.ExtensionContext) {
         } else {
             if (gitRoot !== "") {
                 statusBarItem.color = "white";
-                let token = auth.currentUser?.getIdToken();
-                if (token) {
-                    token.then(value => {
-                        sendGitData(value);
-                    });
-                    token.catch(error => {
-                        vscode.window.showErrorMessage('Error: Unable to communicate with server!');
-                    });
-                }
+                // let token = auth.currentUser?.getIdToken();
+                // if (token) {
+                //     token.then(value => {
+                //         sendGitData(value);
+                //     });
+                //     token.catch(error => {
+                //         vscode.window.showErrorMessage('Error: Unable to communicate with server!');
+                //     });
+                // }
                 currentDocumentListener();
 
             } else {
