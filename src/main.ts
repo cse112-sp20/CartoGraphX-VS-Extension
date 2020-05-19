@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-expressions */
 import * as firebase from "firebase";
 import * as vscode from "vscode";
-import { signIn, signOut, userStatus} from "./auth";
+import { signIn, signOut, userStatus, signUp} from "./auth";
 import { displayCurrentWorkingFile, statusBarItem } from "./chartgraphx";
 import { firebaseConfig } from "./config";
-import { findGitRoot, findGitFiles, findGitUrl, fetchRemoteGit, findGitFileLines, sendGitData, gitRoot } from "./git";
 import { currentDocumentListener } from "./events";
+import { fetchRemoteGit, findGitFileLines, findGitFiles, findGitRoot, findGitUrl, gitRoot, sendGitData } from "./git";
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -32,18 +32,20 @@ export function activate(context: vscode.ExtensionContext) {
         if (auth.currentUser !== null) {
             vscode.window.showQuickPick(
                 [
-                    { label: "Sign out", description: "Stop ChartGraphX tracking", target: signOut },
+                    { label: "Display Current Working File", undefined, target: displayCurrentWorkingFile },
                     { label: "Get user info", undefined, target: userStatus },
-                    { label: "Display Current Working File", undefined, target: displayCurrentWorkingFile }
+                    { label: "Sign out", description: "Stop ChartGraphX tracking", target: signOut }
                 ],
                 { placeHolder: "ChartGraphX commands" }
             ).then( (method) => {
                 method?.target(auth);
             });
         } else {
-            vscode.window.showQuickPick(
-                [{ label: "Email", description: "Sign in using email and password", target: signIn }],
-                { placeHolder: "Select a signin method" }
+            vscode.window.showQuickPick([
+                { label: "Sign In", description: "Sign in using email and password", target: signIn },
+                { label: "Sign Up", description: "Create a user with email and password", target: signUp }
+                ],
+                { placeHolder: "Sign in or create a new ChartGraphX user" }
             ).then( (method) => {
                 method?.target(auth);
             });
