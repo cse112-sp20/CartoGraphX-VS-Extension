@@ -1,11 +1,13 @@
 import * as vscode from 'vscode';
-import * as simpleGit from "simple-git/promise";
+import * as simpleGit from 'simple-git/promise';
+import { XMLHttpRequest } from 'xmlhttprequest-ts';
 
 // Set the global variable gitRoot to the root of the Git repository
 export let gitRoot : string = "";
 export let gitFilesArray : string[] = [];
 export let gitUrl : string = "";
 export let repoName : string = "";
+export let gitFileLines : any = {};
 export let vscodeRoot :string | undefined = vscode.workspace.rootPath;
 export let git : any = simpleGit(vscodeRoot);
 
@@ -24,6 +26,15 @@ export async function findGitRoot() {
     if (gitRoot !== "") {
         vscode.window.showInformationMessage('The Git root directory is "' + gitRoot + '".');
     }
+}
+
+
+/**
+ * This function performs a git fetch on the current repository.
+ */
+export async function fetchRemoteGit() {
+    let gitfetch = await git.fetch('origin', 'master');
+    console.log(gitfetch);
 }
 
 
@@ -47,4 +58,45 @@ export async function findGitUrl() {
     repoName = gitUrl.split('.git')[0].split('/').slice(-1)[0];
     console.log(gitUrl);
     console.log(repoName);
+}
+
+/**
+ * This function gets the line numbers of each file in the remote master branch.
+ */
+export async function findGitFileLines() {
+    // git hash-object -t tree /dev/null
+    let emptyTreeHash = await git.raw(['hash-object', '-t', 'tree', '/dev/null']);
+    emptyTreeHash = emptyTreeHash.split('\n')[0];
+    // git diff --stat <empty_tree_hash> origin/master
+    let gitLines = await git.raw(['diff', '--stat', emptyTreeHash, 'origin/master']);
+    gitLines = gitLines.split('\n');
+    gitLines.pop();
+    gitLines.pop();
+    for (let i = 0; i < gitLines.length; i++) {
+        let curLine = gitLines[i].split('|'); 
+        let key : string = curLine[0].trim();
+        let val : string= curLine[1].split('+')[0].trim();
+        if (val.includes('bytes')) {
+            val = val.split('>')[1].trim();
+        }
+        gitFileLines[key] = val;
+    }
+    console.log(gitFileLines);
+}
+
+/**
+ * This function sends the aggregated git data to the backend endpoint.
+ * 
+ * @param {string} token
+ */
+export async function sendGitData(token : string) {
+    let payload : any = {};
+    payload["github_repo_name"] = repoName;
+    payload["github_repo_url"] = gitUrl;
+    payload["github_repo_file_trees"] = gitFileLines;
+    let req = new XMLHttpRequest();
+    req.open('POST', 'https://webhook.site/590847c9-aff0-430b-9817-42034801fc7d', true);
+    req.setRequestHeader('idToken', token);
+    req.send(JSON.stringify(payload));
+    console.log('Sent git data to server!');
 }
