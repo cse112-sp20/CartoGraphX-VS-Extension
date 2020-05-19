@@ -2,21 +2,11 @@
 
 name: Release and Publish
 on:
-    repository_dispatch:
-        types: passed-tests
+    push:
+        branches: master
 jobs:
-    #build:
-    #    name: Deploy to Firebase
-    #    runs-on: ubuntu-latest
-    #    steps:
-    #    -   uses: actions/checkout@v1
-    #        with:
-    #            submodules: true
-    #    -   uses: ryank90/action-hugo-firebase-deploy@master
-    #        with:
-    #            firebase-token: 1//0fowuyNuqjreWCgYIARAAGA8SNwF-L9IrWiWUAxQNwCC3TuV6ntVxZ4iHMznorz6NKiL3p-mty73EdQvNbk3uxjtwCLWTHU9K0Wo
     release:
-        name: Release
+        name: Release and Publish
         runs-on: ubuntu-18.04
         steps:
         -   name: Checkout
@@ -32,6 +22,7 @@ jobs:
                 GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
                 NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
             run: npx semantic-release
+        -   run: echo `sed 's/API_KEY/${{ secrets.FIREBASE_KEY }}/' src/config.ts` > src/config.ts
         -   name: Vscode release plugin
             uses: JCofman/vscodeaction@master
             env:

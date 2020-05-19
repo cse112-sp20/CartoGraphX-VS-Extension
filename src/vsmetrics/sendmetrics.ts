@@ -1,11 +1,9 @@
 /**
  * This file contains the code that sends the data to firebase. 
  */
-
- import {docs} from '../main';
+ import {auth, docs} from '../main';
  import * as vscode from 'vscode';
  import { VSFile } from './vscodemetrics';
- import {auth} from '../main';
 
 export function sendData() {
     
@@ -44,7 +42,7 @@ export function sendData() {
     });
     
     // Loop through the files and get the paths to the deleted files.
-    createdFiles.forEach((value: VSFile, key: vscode.Uri) => {
+    deletedFiles.forEach((value: VSFile, key: vscode.Uri) => {
         postDocReq["deletedFiles"].push(value.getFilePath());
     });
 
@@ -74,12 +72,12 @@ export function sendData() {
     });
 
 
-    //req.send(JSON.stringify(postDocReqJSON));
+    // req.send(JSON.stringify(postDocReqJSON));
     vscode.window.showInformationMessage("test request was called");
 
 
-    // Tells us if the request was successfully implemented. 
-    req.onreadystatechange = function() {
+    // Tells us if the request was successfully implemented.
+    req.onreadystatechange = () => {
         if (req.readyState === XMLHttpRequest.DONE) {
             if (req.status === 200) {
                 vscode.window.showInformationMessage("request went through");
@@ -90,8 +88,3 @@ export function sendData() {
     };
 
 };
-
-
- 
-
-

@@ -84,76 +84,63 @@ function deleteForUpdate(id) {
 }
 
 exports.addItem = functions.https.onRequest((req, res) => {
-  return cors(req, res, () => {
-    if(req.method !== 'POST') {
-      return res.status(401).json({
-        message: 'Not allowed'
-      });
-    };
-
-
-    //     {
-    //         "uid": "",        
-    //         "createdFiles": ["src/file1.js", "src/file2.js"],
-    //         "modifiedFiles": ["src/file3.js"],
-    //         "deletedFiles": ["src/file4.js"],
-    //         "createdFolders": ["src", "src/test"],
-    //         "deletedFol    ders": ["src/deleted"],
-    //         "inFile": ""
-    //    }
-    const uid = req.body.uid;
-    const createdFiles = req.body.createdFiles;
-    const modifiedFiles = req.body.modifiedFiles;
-    const deletedFiles = req.body.deletedFiles;
-    const createdFolders = req.body.createdFolders;
-    const deletedFolders = req.body.deletedFolders;
-    const inFile = req.body.inFile;
-
-    users.once('value', (snapshot) => {
-        let teammapID = snapshot.child(uid).val().team_maps;
-        let userName = snapshot.child(uid).val().firstName;
-        let teammapLoc = teammap.child(uid);
-        let addedFilesLoc = teammapLoc.child('files_changes/added_files');
-        let modifiedFilesLoc = teammapLoc.child('files_changes/modified_files');
-        let deletedFilesLoc = teammapLoc.child('files_changes/deleted_files');
-        createdFiles.forEach((createdFile) => {
-
+    return cors(req, res, () => {
+        if(req.method !== 'POST') {
+          return res.status(401).json({
+            message: 'Not allowed'
+          })
+        };
+        const uid = req.body.uid;
+        const createdFiles = req.body.createdFiles;
+        const modifiedFiles = req.body.modifiedFiles;
+        const deletedFiles = req.body.deletedFiles;
+    
+        users.once('value', (snapshot) => {
+          let teammapID = snapshot.child(uid).val().team_maps;
+          let userName = snapshot.child(uid).val().firstName;
+          let teammapLoc = teammap.child(teammapID);
+          let addedFilesLoc = teammapLoc.child('files_changes/added_files');
+          let modifiedFilesLoc = teammapLoc.child('files_changes/modified_files');
+          let deletedFilesLoc = teammapLoc.child('files_changes/deleted_files');
+          
+          createdFiles.forEach((createdFile) => {
+    
             let filename = createdFile;
             let revisedFilename1 = filename.replace(/\//g, '_');
       
             // turns / to _ and . to , so it can be added to firebase
             let revisedFilename2 = revisedFilename1.replace('.', ','); 
-
+    
             let fileID = teammapID.concat("@", revisedFilename2);
-            addedFilesLoc.child(`${fileID}`).child(`${userName}`).set("");
+            addedFilesLoc.child(fileID).child(userName).set("");
+          });
+    
+          modifiedFiles.forEach((modifiedFile) => {
+    
+              let filename = modifiedFile.filename;
+              let linecount = modifiedFile.linecount;
+              let revisedFilename1 = filename.replace(/\//g, '_');
+        
+              // turns / to _ and . to , so it can be added to firebase
+              let revisedFilename2 = revisedFilename1.replace('.', ','); 
+    
+              let fileID = teammapID.concat("@", revisedFilename2);
+              modifiedFilesLoc.child(fileID).child(userName).set(linecount);
+          });
+    
+          deletedFiles.forEach((deletedFile) => {
+    
+              let filename = deletedFile;
+              let revisedFilename1 = filename.replace(/\//g, '_');
+        
+              // turns / to _ and . to , so it can be added to firebase
+              let revisedFilename2 = revisedFilename1.replace('.', ','); 
+    
+              let fileID = teammapID.concat("@", revisedFilename2);
+              deletedFilesLoc.child(fileID).child(userName).set("");
+          });
         });
-
-        // modifiedFiles.forEach((modifiedFile) => {
-
-        //     let filename = modifiedFile.filename;
-        //     let linecount = modifiedFile.linecount;
-        //     let revisedFilename1 = filename.replace(/\//g, '_');
-      
-        //     // turns / to _ and . to , so it can be added to firebase
-        //     let revisedFilename2 = revisedFilename1.replace('.', ','); 
-
-        //     let fileID = teammapID.concat("@", revisedFilename2);
-        //     modifiedFilesLoc.child(`${fileID}/${userName}`).set(linecount);
-        // });
-
-        // deletedFiles.forEach((deletedFile) => {
-
-        //     let filename = deletedFile;
-        //     let revisedFilename1 = filename.replace(/\//g, '_');
-      
-        //     // turns / to _ and . to , so it can be added to firebase
-        //     let revisedFilename2 = revisedFilename1.replace('.', ','); 
-
-        //     let fileID = teammapID.concat("@", revisedFilename2);
-        //     deletedFilesLoc.child(`${fileID}/${userName}`).set("");
-        // });
-    });
-  });
+      });
 });
 
 exports.getItems = functions.https.onRequest((req, res) => {

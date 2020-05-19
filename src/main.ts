@@ -7,16 +7,24 @@ import {VSMetrics, VSFile} from './vsmetrics/vscodemetrics';
 import {sendData} from './vsmetrics/sendmetrics';
 import {listen} from './vsmetrics/metricevents';
 import { XMLHttpRequest } from 'xmlhttprequest-ts';
+import { findGitRoot, findGitFiles, findGitUrl } from './git';
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
 
+findGitRoot();
+findGitFiles();
+findGitUrl();
+
 // Contains the list of documents for the user. 
 export let docs : VSMetrics = new VSMetrics();
 
 // Define the number of minutes it takes to update. 
-let numMin = 1;
+const numMin = 1;
+
+// Send the client data every numMin minutes.
+let clientDataTimeout : NodeJS.Timeout;
 
 
 /**
@@ -55,18 +63,26 @@ export function activate(context: vscode.ExtensionContext) {
 
 	/** Adds an observer for changes to the user's sign-in state. (login/logout) */ 
 	auth.onAuthStateChanged(firebaseUser => {
-		if (firebaseUser === null) {statusBarItem.color = "darkgrey";}
-		else {statusBarItem.color = 'white';}
+		if (firebaseUser === null) {
+			statusBarItem.color = "darkgrey";
+			clearInterval(clientDataTimeout);
+		}
+		
+		else {
+			statusBarItem.color = 'white';
+
+			// Listen for file changes. 
+			listen();
+
+			// Sets the interval to get the client data. 
+			clientDataTimeout = setInterval(sendData, 60000 * numMin);
+	
+		}
+
 		console.log(JSON.stringify(firebaseUser,null,2));
 	});
 	
 	context.subscriptions.push(disposable);
-
-	// Listen for file changes. 
-	listen();
-
-	// Send the client data every numMin minutes.
-	setInterval(sendData, 60000 * numMin);
 	
 
 }
