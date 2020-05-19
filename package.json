@@ -63,6 +63,9 @@
 		"fail": [
 			"@semantic-release/github"
 		],
+		"prepare": [
+			"@semantic-release/npm"
+		],
 		"plugins": [
 			[
 				"@semantic-release/commit-analyzer",
