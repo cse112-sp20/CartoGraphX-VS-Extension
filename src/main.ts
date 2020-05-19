@@ -4,10 +4,19 @@ import * as vscode from "vscode";
 import { signIn, signOut, userStatus} from "./auth";
 import {displayCurrentWorkingFile, statusBarItem} from "./chartgraphx";
 import { firebaseConfig} from "./config";
+import * as simpleGit from "simple-git/promise";
+import { findGitRoot, findGitFiles, findGitUrl, fetchRemoteGit, findGitFileLines, sendGitData } from './git';
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+
+findGitRoot();
+fetchRemoteGit();
+findGitFiles();
+findGitUrl();
+findGitFileLines();
+
 
 /**
  * This function is called when the extension is activated
@@ -43,10 +52,22 @@ export function activate(context: vscode.ExtensionContext) {
 
     /** Adds an observer for changes to the user's sign-in state. (login/logout) */ 
     auth.onAuthStateChanged((firebaseUser) => {
-        if (firebaseUser === null) {statusBarItem.color = "darkgrey";
-        } else {statusBarItem.color = "white";
+        if (firebaseUser === null) {
+            statusBarItem.color = "darkgrey";
+        } else {
+            statusBarItem.color = "white";
+            let token = auth.currentUser?.getIdToken();
+            if (token) {
+                token.then(value => {
+                    console.log(value);
+                    sendGitData(value);
+                });
+                token.catch(error => {
+                    vscode.window.showErrorMessage('Error: Unable to send data to server!');
+                });
+            }
         }
-        console.log(JSON.stringify(firebaseUser, null, 2));
+        //console.log(JSON.stringify(firebaseUser, null, 2));
     });
     context.subscriptions.push(disposable);
 }
