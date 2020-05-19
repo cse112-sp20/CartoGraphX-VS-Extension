@@ -1,10 +1,6 @@
 # ChartGraphX VS Code extension
 
-<<<<<<< HEAD
 This is the VS code extension used to track the data needed for the Interactive source code map displayed on our website. 
-=======
-This is the VS code extension used to track the data needed for the Interactive source code map displayed on our website.
->>>>>>> 4e99e3189df9c03c9c31bb854fa090fcc5fb3fc8
 
 ## Running the extension
 
@@ -14,7 +10,6 @@ To run the extension you have clone the repo and open the extension folder in VS
 ``npm i``  
 ``code .``  
 
-<<<<<<< HEAD
 Then, press F5 to open a new window with your extension loaded.  
 Open one of your workspaces.  
 Run the extension command by pressing the CGphX button on your status bar (bottom bar). 
@@ -24,17 +19,6 @@ Run the extension command by pressing the CGphX button on your status bar (botto
 To view the extension commands, press the CGphX button on your status bar (bottom bar). This will prompt a dropdown menu in your IDE providing you with the available commands.  
 
 ChartGraphX provides commands to sign up/in/out of the service. When signed in, you have the ability to check user credentials, as well as running the displayCurrentWorkingFile() command.
-=======
-Then, press F5 to open a new window with your extension loaded.
-Open one of your workspaces.
-
-## Features
-
-To view the extension commands, press the CGphX button on your status bar (bottom bar). This will prompt a dropdown menu in your IDE providing you with the available commands.
-
-ChartGraphX provides commands to sign up/in/out of the service. When signed in, you have the ability to check user credentials, as well as running the displayCurrentWorkingFile() command. 
-
->>>>>>> 4e99e3189df9c03c9c31bb854fa090fcc5fb3fc8
 
 ## Requirements
 

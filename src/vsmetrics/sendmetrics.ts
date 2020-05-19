@@ -2,7 +2,7 @@
  * This file contains the code that sends the data to firebase. 
  */
 
- import {docs} from '../main';
+ //import {docs} from '../main';
 
  // Change this to change the number of minutes it takes to send to FB. 
  let numMin = 1;

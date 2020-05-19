@@ -1,9 +1,7 @@
 const functions = require("firebase-functions");
 const cors = require('cors')({ origin: true });
 const admin = require('firebase-admin');
-const mapHelper = require('./mapHelper.js');
-
-admin.initializeApp();
+const mapHelper = require('./directoryTreeHelper');
 
 const database = admin.database().ref('/items');
 const teammap = admin.database().ref('/team_maps');
@@ -66,7 +64,7 @@ router.delete('/delete', (req,res) =>{
 });
 
 
-router.update('/update',(req,res) =>{
+router.put('/update',(req,res) =>{
       const id = req.query.id;
       const github_token_id = req.body.github_token_id;
       const users = req.body.users; // users is an array
@@ -107,3 +105,5 @@ router.update('/update',(req,res) =>{
       mapHelper.getItemsFromDatabase(res,admin);
 
 });
+
+module.exports = router;
