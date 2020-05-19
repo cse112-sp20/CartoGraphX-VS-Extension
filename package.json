@@ -85,6 +85,7 @@
 	},
 	"dependencies": {
 		"firebase": "^7.14.3",
-		"simple-git": "^2.5.0"
+		"simple-git": "^2.5.0",
+		"xmlhttprequest-ts": "^1.0.1"
 	}
 }
