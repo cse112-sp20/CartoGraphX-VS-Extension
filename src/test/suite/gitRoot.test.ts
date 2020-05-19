@@ -8,9 +8,9 @@ import * as simpleGit from "simple-git/promise";
 suite("testing gitRoot", () => {
 
     // Set the global variable gitRoot to the root of the Git repository
-    var gitRoot : string = "";
-    var vscodeRoot :string | undefined = vscode.workspace.rootPath;
-    var git : any = simpleGit(vscodeRoot);
+    let gitRoot : string = "";
+    let vscodeRoot :string | undefined = vscode.workspace.rootPath;
+    let git : any = simpleGit(vscodeRoot);
 
 
     test("if vscode rootpath exists, a git repository should be able to be found", async () => {
