@@ -34,7 +34,7 @@ export async function findGitRoot() {
  */
 export async function fetchRemoteGit() {
     let gitfetch = await git.fetch('origin', 'master');
-    console.log(gitfetch);
+    //console.log(gitfetch);
 }
 
 
@@ -45,7 +45,7 @@ export async function findGitFiles() {
     let gitFiles = await git.raw(['ls-tree', '-r', 'origin/master', '--full-tree', '--name-status']);
     gitFilesArray = gitFiles.split('\n');
     gitFilesArray.pop(); // Removes the last empty element from the array created from splitting on \n
-    console.log(gitFilesArray);
+    //console.log(gitFilesArray);
 }
 
 
@@ -56,8 +56,8 @@ export async function findGitUrl() {
     gitUrl = await git.raw(['config', '--get', 'remote.origin.url']);
     gitUrl = gitUrl.split('\n')[0];
     repoName = gitUrl.split('.git')[0].split('/').slice(-1)[0];
-    console.log(gitUrl);
-    console.log(repoName);
+    //console.log(gitUrl);
+    //console.log(repoName);
 }
 
 /**
@@ -81,7 +81,7 @@ export async function findGitFileLines() {
         }
         gitFileLines[key] = val;
     }
-    console.log(gitFileLines);
+    //console.log(gitFileLines);
 }
 
 /**
@@ -98,5 +98,5 @@ export async function sendGitData(token : string) {
     req.open('POST', 'https://webhook.site/590847c9-aff0-430b-9817-42034801fc7d', true);
     req.setRequestHeader('idToken', token);
     req.send(JSON.stringify(payload));
-    console.log('Sent git data to server!');
+    //console.log('Sent git data to server!');
 }
