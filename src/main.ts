@@ -35,7 +35,6 @@ export function activate(context: vscode.ExtensionContext) {
                     { label: "Display Current Working File", undefined, target: displayCurrentWorkingFile },
                     { label: "Get user info", undefined, target: userStatus },
                     { label: "Sign out", description: "Stop ChartGraphX tracking", target: signOut },
-                    { label: "Display Current Working File", undefined, target: displayCurrentWorkingFile },
                     { label: "Create map", descrition: "Create a map", undefined, target: createMapFunction}
                 ],
                 { placeHolder: "ChartGraphX commands" }
