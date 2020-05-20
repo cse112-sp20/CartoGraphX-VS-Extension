@@ -19,6 +19,7 @@ async function sendCurrentFile(token : string, file : string) {
     let req = new XMLHttpRequest();
     req.open('POST', 'https://us-central1-remote-13.cloudfunctions.net/api/map/currentEdit', true);
     req.setRequestHeader('idToken', token);
+    req.setRequestHeader('Content-Type', 'application/json');
     req.send(JSON.stringify(payload));
     //console.log("Sent current file to the server!");
 }
