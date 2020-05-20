@@ -4,23 +4,29 @@ jobs:
   coverage_checking:
     runs-on: ubuntu-latest
     steps:
-      - name: Checking out...
-        uses: actions/checkout@v1
-      - name: Install Node.js
-        uses: actions/setup-node@v1
+      - uses: devmasx/coverage-check-action@v1.1.0
         with:
-          node-version: 10.x
-      - run: npm install
-      - run: echo `sed 's/API_KEY/${{ secrets.FIREBASE_KEY }}/' src/config.ts` > src/config.ts
-      - run: npm run compile
-      - name: Run tests
-        uses: GabrielBB/xvfb-action@v1.0
-        with:
-          run: npm run unit-test
-      - name: Monitor coverage
-        uses: slavcodev/coverage-monitor-action@1.1.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          clover_file: "logs/clover.xml"
-          threshold_alert: 10
-          threshold_warning: 50
+          type: lcov
+          result_path: coverage/example.lcov
+          min_coverage: 90
+          token: ${{secrets.GITHUB_TOKEN}}
+      # - name: Checking out...
+      #   uses: actions/checkout@v1
+      # - name: Install Node.js
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: 10.x
+      # - run: npm install
+      # - run: echo `sed 's/API_KEY/${{ secrets.FIREBASE_KEY }}/' src/config.ts` > src/config.ts
+      # - run: npm run compile
+      # - name: Run tests
+      #   uses: GabrielBB/xvfb-action@v1.0
+      #   with:
+      #     run: npm run unit-test
+      # - name: Monitor coverage
+      #   uses: slavcodev/coverage-monitor-action@1.1.0
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     clover_file: "logs/clover.xml"
+      #     threshold_alert: 10
+      #     threshold_warning: 50
