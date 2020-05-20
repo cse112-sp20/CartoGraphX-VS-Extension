@@ -1,14 +1,17 @@
-name: Converage
-on: [push]
+name: Coverage
+on: [pull_request]
 jobs:
   coverage_checking:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
     steps:
-      - name: Check out
-        uses: actions/checkout@v1
-      - name: Generate coverage
-        uses: romeovs/lcov-reporter-action@v0.2.16
+      - uses: actions/checkout@v1
+      - name: Test
+        run: npm run unit-test
+
+      - name: Monitor coverage
+        uses: slavcodev/coverage-monitor-action@1.1.0
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          lcov-file: ./coverage/lcov.info
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          clover_file: "logs/clover.xml"
+          threshold_alert: 10
+          threshold_warning: 50
