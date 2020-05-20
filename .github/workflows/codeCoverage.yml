@@ -4,7 +4,8 @@ jobs:
   coverage_checking:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - name: Checking out...
+        uses: actions/checkout@v1
       - name: Install Node.js
         uses: actions/setup-node@v1
         with:
