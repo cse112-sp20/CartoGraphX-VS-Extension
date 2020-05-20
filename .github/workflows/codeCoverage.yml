@@ -5,9 +5,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Test
-        run: npm run unit-test
-
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - run: npm install
+      - run: echo `sed 's/API_KEY/${{ secrets.FIREBASE_KEY }}/' src/config.ts` > src/config.ts
+      - run: npm run compile
+      - name: Run tests
+        uses: GabrielBB/xvfb-action@v1.0
+        with:
+          run: npm run unit-test
       - name: Monitor coverage
         uses: slavcodev/coverage-monitor-action@1.1.0
         with:
