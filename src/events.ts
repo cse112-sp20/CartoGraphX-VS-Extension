@@ -17,7 +17,7 @@ async function sendCurrentFile(token : string, file : string) {
     payload["github_repo_url"] = gitUrl;
     payload["filepath"] = file;
     let req = new XMLHttpRequest();
-    req.open('POST', 'https://webhook.site/590847c9-aff0-430b-9817-42034801fc7d', true);
+    req.open('POST', 'https://us-central1-remote-13.cloudfunctions.net/api/map/currentEdit', true);
     req.setRequestHeader('idToken', token);
     req.send(JSON.stringify(payload));
     //console.log("Sent current file to the server!");
