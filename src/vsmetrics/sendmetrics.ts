@@ -3,13 +3,16 @@
  */
  import {auth, docs} from '../main';
  import * as vscode from 'vscode';
- import { VSFile } from './vscodemetrics';
+ import { VSFile, VSFolder } from './vscodemetrics';
+ import {XMLHttpRequest} from 'xmlhttprequest-ts';
 
 export function sendData() {
+
+    vscode.window.showInformationMessage("sendData has been called!");
     
     // Create the JSON object. 
-    let postDocReq : any = {
-        "uid": auth.currentUser?.getIdToken,        
+    let postAddItems : any = {
+        "uid": "",        
         "createdFiles": [],
         "modifiedFiles": [],
         "deletedFiles": [],
@@ -17,62 +20,43 @@ export function sendData() {
         "deletedFolders": [],
         "inFile": ""
     };
+
+
+    // Parse the lists and format the values of the request. 
+    parseLists(postAddItems);    
+
+    // Add the current file that the user is in. 
+    postAddItems["inFile"] = docs.getCurrFilePath();
+
+    // Begin the request and open it. 
+    let req = new XMLHttpRequest();   
     
-    // Get the created, modified, and deleted files. 
-    let createdFiles = docs.getCreatedFilesMap();
-    let modifiedFiles = docs.getModifiedFilesMap();
-    let deletedFiles = docs.getDeletedFilesMap();
+    req.open('POST', 'https://ena1vcfxyrgqd.x.pipedream.net', true);
 
-    // Get the created and deleted folders. 
-    let createdFolders = docs.getCreatedFoldersMap();
-    let deletedFolders = docs.getDeletedFoldersMap();
+    vscode.window.showInformationMessage("Request was created and opened.");
 
-    // Loop through the files and get the paths to the created files. 
-    createdFiles.forEach((value: VSFile, key: vscode.Uri) => {
-        postDocReq["createdFiles"].push(value.getFilePath());
-    });
-
-    // Loop through the files and get the paths to the modified files. 
-    modifiedFiles.forEach((value: VSFile, key: vscode.Uri) => {
-        let modifiedFileInfo : any = {};
-        modifiedFileInfo["filename"] = value.getFilePath();
-        modifiedFileInfo["lineCount"] = value.getNumLines();
-        let modifiedFileInfoJSON = <JSON>modifiedFileInfo;
-        postDocReq["modifiedFiles"].push(modifiedFileInfoJSON);
-    });
     
-    // Loop through the files and get the paths to the deleted files.
-    deletedFiles.forEach((value: VSFile, key: vscode.Uri) => {
-        postDocReq["deletedFiles"].push(value.getFilePath());
-    });
-
-
-    // Get the path of the file that the user is currently in. 
-    postDocReq["inFile"] = docs.getCurrFilePath();
-
-
-    // Convert into a JSON object and send the request:
-    let postDocReqJSON = <JSON>postDocReq;
-   
-
-    let req = new XMLHttpRequest();
-
-    vscode.window.showInformationMessage("made it here");
     
-    req.open('POST', 'https://us-central1-remote-13.cloudfunctions.net/addItem', true);
+    // eslint-disable-next-line no-unused-expressions
+    auth.currentUser?.getIdToken(true).then((idToken: string) => {
 
-    // Send it over to Firebase. 
-    auth.currentUser?.getIdToken(true).then((idToken: string) =>{
-        req.setRequestHeader('Content-type', 'application/json');
-        req.setRequestHeader('idToken', idToken);
-        req.send(JSON.stringify(postDocReqJSON));
+        vscode.window.showInformationMessage("Gets passed auth check.");
+
+        req.setRequestHeader("idToken", idToken);
+
+        // Type cast to JSON and send request.
+        let postAddItemsJSON = <JSON>postAddItems;
+
+        req.send(JSON.stringify(postAddItemsJSON));
+
+        // Clear the lists once the JSON is sent. 
+        clearLists();
+
     })
     .catch((error : any) => {
-
+        vscode.window.showErrorMessage(error.toString());
     });
 
-
-    // req.send(JSON.stringify(postDocReqJSON));
     vscode.window.showInformationMessage("test request was called");
 
 
@@ -87,4 +71,92 @@ export function sendData() {
         }
     };
 
-};
+}
+
+function parseLists(JSONObj : any) {
+    // Get the created, modified, and deleted files. 
+    let createdFiles = docs.getCreatedFilesMap();
+    let modifiedFiles = docs.getModifiedFilesMap();
+    let deletedFiles = docs.getDeletedFilesMap();
+
+    // Get the created and deleted folders. 
+    let createdFolders = docs.getCreatedFoldersMap();
+    let deletedFolders = docs.getDeletedFoldersMap();
+
+
+    // Create the arrays that will be sent in the post req to FB. 
+    let createdFilesJSON : any = [];
+    let modifiedFilesJSON : any = [];
+    let deletedFilesJSON : any = [];
+    let createdFoldersJSON : any = [];
+    let deletedFoldersJSON : any = [];
+
+
+    // Loop through the files and get the paths to the created files. 
+    createdFiles.forEach((value: VSFile, key: vscode.Uri) => {
+        createdFilesJSON.push(value.getFilePath());
+    });
+
+    vscode.window.showInformationMessage("Added created files.");
+
+    // Loop through the files and get the paths to the modified files. 
+    modifiedFiles.forEach((value: VSFile, key: vscode.Uri) => {
+        let modifiedFileInfo : any = {};
+        modifiedFileInfo["filename"] = value.getFilePath();
+        modifiedFileInfo["linecount"] = value.getNumLines();
+        modifiedFilesJSON.push(modifiedFileInfo);
+    });
+
+    vscode.window.showInformationMessage("Added modified files.");
+
+    
+    // Loop through the files and get the paths to the deleted files.
+    deletedFiles.forEach((value: VSFile, key: vscode.Uri) => {
+        deletedFilesJSON.push(value.getFilePath());
+    });
+
+    vscode.window.showInformationMessage("Added deleted files.");
+
+
+    // Loop through the folders and get the paths to the created folders. 
+    createdFolders.forEach((value: VSFolder, key: vscode.Uri) => {
+        createdFoldersJSON.push(value.getFolderPath());
+    });
+
+    vscode.window.showInformationMessage("Added created folders.");
+
+
+    // Loop through the folders and get the paths to the deleted folders. 
+    deletedFolders.forEach((value: VSFolder, key: vscode.Uri) => {
+        deletedFoldersJSON.push(value.getFolderPath());
+    });
+
+    vscode.window.showInformationMessage("Added deleted folders.");
+
+
+    // Add the lists into the JSON object. 
+    JSONObj["createdFiles"] = createdFilesJSON;
+    JSONObj["modifiedFiles"] = modifiedFilesJSON;
+    JSONObj["deletedFiles"] = deletedFilesJSON;
+    JSONObj["createdFolders"] = createdFoldersJSON;
+    JSONObj["deletedFolders"] = deletedFoldersJSON; 
+}
+
+function clearLists() {
+    // Get the created, modified, and deleted files. 
+    let createdFiles = docs.getCreatedFilesMap();
+    let modifiedFiles = docs.getModifiedFilesMap();
+    let deletedFiles = docs.getDeletedFilesMap();
+
+    // Get the created and deleted folders. 
+    let createdFolders = docs.getCreatedFoldersMap();
+    let deletedFolders = docs.getDeletedFoldersMap();
+
+
+    // Clear them.
+    createdFiles.clear();
+    modifiedFiles.clear();
+    deletedFiles.clear();
+    createdFolders.clear();
+    deletedFolders.clear();
+}

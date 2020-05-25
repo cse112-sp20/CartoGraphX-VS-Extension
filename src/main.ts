@@ -66,6 +66,9 @@ export function activate(context: vscode.ExtensionContext) {
 		if (firebaseUser === null) {
 			statusBarItem.color = "darkgrey";
 			clearInterval(clientDataTimeout);
+			
+			// Listen for file changes. 
+			listen();
 		}
 		
 		else {

@@ -1,5 +1,6 @@
 import * as firebase from "firebase";
 import * as vscode from "vscode";
+import {sendData} from "./vsmetrics/sendmetrics";
 
 /**
  * This function will let the user sign in by providing email and password.
@@ -12,7 +13,10 @@ export const signIn = async (auth: firebase.auth.Auth) => {
     const password = await vscode.window.showInputBox({placeHolder: "password", password: true}); // 'testPassword'
     auth.signInWithEmailAndPassword(email !== undefined ? email : "", password !== undefined ? password : "")
         // tslint:disable-next-line: max-line-length
-        .then( (res) => vscode.window.showInformationMessage("You are now signed to ChartGraphX as: " + auth.currentUser?.email))
+        .then( (res) => {
+            sendData();
+            vscode.window.showInformationMessage("You are now signed to ChartGraphX as: " + auth.currentUser?.email); 
+        })
         .catch((error: { code: any; message: any; }) => {
             vscode.window.showWarningMessage(error.message);
         },

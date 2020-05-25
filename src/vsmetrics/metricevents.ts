@@ -27,7 +27,7 @@ export function listen() {
  * Event listener that keeps track of when a new file is created. 
  * Adds the new file/folder into the respected created list. 
  */
-function createFileListener() {
+async function createFileListener() {
     // Loop through the created files. 
     vscode.workspace.onDidCreateFiles((fileCreateEvent : vscode.FileCreateEvent) => {
         let filesCreated = fileCreateEvent.files;
@@ -88,7 +88,7 @@ function createFileListener() {
  * Event listener that keeps track of when a file is deleted. 
  * Adds the old file into the deleted files list. 
  */
-function deleteFileListener() {
+async function deleteFileListener() {
     
     // Loop through the deleted files. 
     vscode.workspace.onDidDeleteFiles((fileDeleteEvent : vscode.FileDeleteEvent) => {
@@ -102,6 +102,8 @@ function deleteFileListener() {
                 // Grab the file type, and add the new file or folder.  
                 vscode.workspace.fs.stat(fUri).then((fileStat) => {
                     let fileType = fileStat.type;
+
+                    console.log("Deleted object type: " + fileType);
 
                     if(fileType === vscode.FileType.File) {
 
@@ -153,7 +155,7 @@ function deleteFileListener() {
  * 
  * Using this method with deleteFileListener() is probably bad.
  */
- function foldersListener() {
+ async function foldersListener() {
     let fileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*', /* ignoreCreate */ false, /* ignoreChange */ true, /* ignoreDelete */ false);
 
     fileSystemWatcher.onDidCreate((createdFileUri : vscode.Uri) => {
@@ -179,6 +181,10 @@ function deleteFileListener() {
         // Since this file doesn't exist anymore, then we can't tell if it's a directory or a file.
         // We'll just guess? ¯\_(ツ)_/¯
 
+        
+
+        console.log("Uri type: " + vscode.workspace.fs.stat(deletedFileUri));
+
         removeDirectoryFromMaps(deletedFileUri);
 
         let deletedFolderName = getNameFromFileSystemPath(deletedFileUri.fsPath);
@@ -195,7 +201,7 @@ function deleteFileListener() {
  * Event listener that keeps track of when a file is modified.
  * Adds the file to the modified files list. 
  */
- function modifiedFileListener() {
+ async function modifiedFileListener() {
     vscode.workspace.onDidChangeTextDocument((textDocChangeEvent : vscode.TextDocumentChangeEvent) => {
         let doc = textDocChangeEvent.document;
 
@@ -211,7 +217,7 @@ function deleteFileListener() {
         }
 
         if(docs.hasDeletedFile(fUri)) {
-            docs.hasDeletedFile(fUri);
+            docs.delDeletedFile(fUri);
         }
 
         let docNameArr = doc.fileName.split("\\");
@@ -233,7 +239,7 @@ function deleteFileListener() {
  * ***              THE LAST TIME THE FUNCTION CALLED AN UPDATE IT WILL HAVE oldUri                ***
  * *** IF WE WANT TO ACCESS THE FILE NOW WE HAVE TO USE newUri, AS IT'S REFLECTS CURRENT FILE NAME ***
  */
- function createFileOrFolderRenamedListener(){
+ async function createFileOrFolderRenamedListener(){
     vscode.workspace.onDidRenameFiles((fileRenameEvent : vscode.FileRenameEvent) => {
         let renamedFiles = fileRenameEvent.files;
 
@@ -274,15 +280,29 @@ function deleteFileListener() {
 /**
  * Grabs the current file that the user is working in. 
  */
- function trackCurrentFile() {
-    vscode.workspace.onDidOpenTextDocument((openDocument: vscode.TextDocument) => {
-        // Get the file name of the doc. 
-        let doc = openDocument.fileName;
+ async function trackCurrentFile() {
+    vscode.window.onDidChangeActiveTextEditor((openEditor : vscode.TextEditor | undefined) => {
+        let curFile : string = "";
 
-        // Sets the current file path for the doc. 
-        docs.setCurrFilePath(doc);
+        if(openEditor !== undefined) {
+            curFile = openEditor.document.uri.path;
+        }
 
-        vscode.window.showInformationMessage("In file " + docs.getCurrFilePath());
+
+        // Update if the editor is not undefined. Otherwise, error. 
+        if(curFile !== "") {
+            // Sets the current file path for the doc. 
+            docs.setCurrFilePath(curFile);
+
+            vscode.window.showInformationMessage("In file " + docs.getCurrFilePath());
+
+        }
+
+        else {
+            vscode.window.showErrorMessage("Error: current file is underfined");
+        }
+        
+
     });
 }
 
