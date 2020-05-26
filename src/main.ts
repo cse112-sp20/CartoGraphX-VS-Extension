@@ -1,15 +1,15 @@
 /* eslint-disable no-unused-expressions */
 import * as firebase from "firebase";
 import * as vscode from "vscode";
-import { signIn, signOut, userStatus} from "./auth";
-import {displayCurrentWorkingFile, statusBarItem} from "./chartgraphx";
-import { firebaseConfig} from "./config";
-import * as simpleGit from "simple-git/promise";
-import { findGitRoot, findGitFiles, findGitUrl, fetchRemoteGit, findGitFileLines, sendGitData } from './git';
+import { signIn, signOut, userStatus, signUp} from "./auth";
+import { displayCurrentWorkingFile, statusBarItem, createMapFunction } from "./chartgraphx";
+import { firebaseConfig } from "./config";
+import { currentDocumentListener } from "./events";
+import { fetchRemoteGit, findGitFileLines, findGitFiles, findGitRoot, findGitUrl, gitRoot, sendGitData } from "./git";
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+export const auth = firebase.auth();
 
 findGitRoot();
 fetchRemoteGit();
@@ -32,44 +32,55 @@ export function activate(context: vscode.ExtensionContext) {
         if (auth.currentUser !== null) {
             vscode.window.showQuickPick(
                 [
-                    { label: "Sign out", description: "Stop ChartGraphX tracking", target: signOut },
+                    { label: "Display Current Working File", undefined, target: displayCurrentWorkingFile },
                     { label: "Get user info", undefined, target: userStatus },
-                    { label: "Display Current Working File", undefined, target: displayCurrentWorkingFile }
+                    { label: "Sign out", description: "Stop ChartGraphX tracking", target: signOut },
+                    { label: "Create map", descrition: "Create a map", undefined, target: createMapFunction}
                 ],
                 { placeHolder: "ChartGraphX commands" }
             ).then( (method) => {
                 method?.target(auth);
             });
         } else {
-            vscode.window.showQuickPick(
-                [{ label: "Email", description: "Sign in using email and password", target: signIn }],
-                { placeHolder: "Select a signin method" }
+            vscode.window.showQuickPick([
+                { label: "Sign In", description: "Sign in using email and password", target: signIn },
+                { label: "Sign Up", description: "Create a user with email and password", target: signUp }
+                ],
+                { placeHolder: "Sign in or create a new ChartGraphX user" }
             ).then( (method) => {
                 method?.target(auth);
             });
         }
     });
+    context.subscriptions.push(disposable);
 
-    /** Adds an observer for changes to the user's sign-in state. (login/logout) */ 
+
+    /** Adds an event listener for changes to the user's sign-in state. (login/logout) */ 
     auth.onAuthStateChanged((firebaseUser) => {
         if (firebaseUser === null) {
             statusBarItem.color = "darkgrey";
         } else {
-            statusBarItem.color = "white";
-            let token = auth.currentUser?.getIdToken();
-            if (token) {
-                token.then(value => {
-                    console.log(value);
-                    sendGitData(value);
-                });
-                token.catch(error => {
-                    vscode.window.showErrorMessage('Error: Unable to send data to server!');
-                });
+            if (gitRoot !== "") {
+                statusBarItem.color = "white";
+                // let token = auth.currentUser?.getIdToken();
+                // if (token) {
+                //     token.then(value => {
+                //         sendGitData(value);
+                //     });
+                //     token.catch(error => {
+                //         vscode.window.showErrorMessage('Error: Unable to communicate with server!');
+                //     });
+                // }
+                currentDocumentListener();
+
+            } else {
+                statusBarItem.color = "darkgrey";
+                vscode.window.showErrorMessage("Not currently in a Git repository!");
             }
         }
-        //console.log(JSON.stringify(firebaseUser, null, 2));
+        console.log(JSON.stringify(firebaseUser, null, 2));
     });
-    context.subscriptions.push(disposable);
+    
 }
 
 /** this method is called when your extension is deactivated */

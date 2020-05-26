@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as simpleGit from 'simple-git/promise';
 import { XMLHttpRequest } from 'xmlhttprequest-ts';
+import { currentMap } from './chartgraphx';
 
 // Set the global variable gitRoot to the root of the Git repository
 export let gitRoot : string = "";
@@ -34,7 +35,7 @@ export async function findGitRoot() {
  */
 export async function fetchRemoteGit() {
     let gitfetch = await git.fetch('origin', 'master');
-    console.log(gitfetch);
+    //console.log(gitfetch);
 }
 
 
@@ -45,7 +46,7 @@ export async function findGitFiles() {
     let gitFiles = await git.raw(['ls-tree', '-r', 'origin/master', '--full-tree', '--name-status']);
     gitFilesArray = gitFiles.split('\n');
     gitFilesArray.pop(); // Removes the last empty element from the array created from splitting on \n
-    console.log(gitFilesArray);
+    //console.log(gitFilesArray);
 }
 
 
@@ -56,8 +57,8 @@ export async function findGitUrl() {
     gitUrl = await git.raw(['config', '--get', 'remote.origin.url']);
     gitUrl = gitUrl.split('\n')[0];
     repoName = gitUrl.split('.git')[0].split('/').slice(-1)[0];
-    console.log(gitUrl);
-    console.log(repoName);
+    //console.log(gitUrl);
+    //console.log(repoName);
 }
 
 /**
@@ -81,7 +82,7 @@ export async function findGitFileLines() {
         }
         gitFileLines[key] = val;
     }
-    console.log(gitFileLines);
+    //console.log(gitFileLines);
 }
 
 /**
@@ -91,12 +92,25 @@ export async function findGitFileLines() {
  */
 export async function sendGitData(token : string) {
     let payload : any = {};
+    let response : any = {};
+    payload["map_name"] = currentMap;
     payload["github_repo_name"] = repoName;
     payload["github_repo_url"] = gitUrl;
     payload["github_repo_file_trees"] = gitFileLines;
     let req = new XMLHttpRequest();
-    req.open('POST', 'https://webhook.site/590847c9-aff0-430b-9817-42034801fc7d', true);
+    req.open('POST', 'https://us-central1-remote-13.cloudfunctions.net/api/map/createMap', true);
     req.setRequestHeader('idToken', token);
+    req.setRequestHeader('Content-Type', 'application/json');
+    req.onreadystatechange = function() {
+        if (req.readyState === XMLHttpRequest.DONE) {
+            if (req.status === 200) {
+                response = JSON.parse(req.responseText);
+                vscode.window.showInformationMessage('Map successfully created! Your map key is: "' + response["data"] + '"!');
+            } else {
+                console.log("An error has occurred while communicating with the server!");
+            }
+        }
+    };
+    console.log(JSON.stringify(payload));
     req.send(JSON.stringify(payload));
-    console.log('Sent git data to server!');
 }
