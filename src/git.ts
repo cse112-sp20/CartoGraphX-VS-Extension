@@ -109,7 +109,7 @@ export async function sendGitData(token : string) {
                 response = JSON.parse(req.responseText);
                 vscode.window.showInformationMessage('Your map key is: "' + response["data"] + '"!');
                 mapId = response["data"];
-                generateWebview();
+                generateWebview(mapId);
             } else {
                 console.log("An error has occurred while communicating with the server!");
             }
@@ -117,4 +117,12 @@ export async function sendGitData(token : string) {
     };
     console.log(JSON.stringify(payload));
     req.send(JSON.stringify(payload));
+}
+
+/**
+ * Function to set the map id of the current extension
+ * @param {string} id
+ */
+export function setMapID(id : string) {
+    mapId = id;
 }
