@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as simpleGit from 'simple-git/promise';
 import { XMLHttpRequest } from 'xmlhttprequest-ts';
-import { currentMap } from './chartgraphx';
+import { currentMap } from './cartographx';
 
 // Set the global variable gitRoot to the root of the Git repository
 export let gitRoot : string = "";
