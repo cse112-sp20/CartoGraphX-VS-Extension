@@ -28,6 +28,7 @@ jobs:
             uses: stefanzweifel/git-auto-commit-action@v4.1.6
             with:
                 commit_message: "Updated package.json version"
+                push_options: --force
     publish:
         name: Publish
         runs-on: ubuntu-18.04
