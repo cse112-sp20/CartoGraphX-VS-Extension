@@ -17,8 +17,7 @@ Open one of your workspaces.
 Run the extension command by pressing the CGphX button on your status bar (bottom bar). 
 
 ## Features
-<img align="right" src="/readme.img/CGphx_proto.png" alt="prototypes"
-	title="GhartGraphX extension" width="50%" />
+
 To view the extension commands, press the CGphX button on your status bar (bottom bar). This will prompt a dropdown menu in your IDE providing you with the available commands.  
 
 
