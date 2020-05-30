@@ -1,37 +1,50 @@
 import * as assert from "assert";
-import * as firebase from "firebase";
 import * as vscode from "vscode";
-import { firebaseConfig } from "../../config";
-import * as simpleGit from "simple-git/promise";
+import { fetchRemoteGit, findGitFileLines, findGitFiles, findGitRoot, findGitUrl, gitRoot, gitFilesArray, gitUrl, repoName, gitFileLines, vscodeRoot } from "../../git";
 
-/** This test suite uses the provided firebaseConfig and tests signIn and signOut functions. */
-suite("testing gitRoot", () => {
-
-    // Set the global variable gitRoot to the root of the Git repository
-    let gitRoot : string = "";
-    let vscodeRoot :string | undefined = vscode.workspace.rootPath;
-    let git : any = simpleGit(vscodeRoot);
-
-
-    test("if vscode rootpath exists, a git repository should be able to be found", async () => {
-        if (vscodeRoot === undefined) {
-            assert.notEqual(git, undefined);
-            try {
-                gitRoot = await git.revparse(['--show-toplevel']);
-            } catch(err) {
-                assert.notEqual(err, null);
-            }
+suite("testing gitRoot.ts", () => {
+    //vscode.window.showInformationMessage("Start sample test");
+    /*test("assert vscodeRoot isn't undefined", async () => {
+        assert.notEqual(undefined, vscodeRoot);
+    });*/
+    
+    test("assert that gitRoot is valid string", async () => {
+        findGitRoot();
+        assert.notEqual(undefined, gitRoot);
+        assert.equal(typeof "string", typeof gitRoot);
+        if (gitRoot.length === 0) {
+            assert.equal("", gitRoot);
         }
-        else {
-            assert.notEqual(git, undefined);
-            try {  
-                gitRoot = await git.revparse(['--show-toplevel']);
-            } catch(err) {
-                // If the current folder is not part of a Git repository, set empty string
-                gitRoot = "";
-            }
-            assert.notEqual(gitRoot, null);
+    });
+
+    test("assert that gitFilesArray is valid array", async () => {
+        findGitFiles();
+        assert.notEqual(undefined, gitFilesArray);
+        assert.equal(true, Array.isArray(gitFilesArray));
+    });
+
+    test("assert that gitUrl is valid string", async () => {
+        findGitUrl();
+        assert.notEqual(undefined, gitUrl);
+        assert.equal(typeof "string", typeof gitUrl);
+        if (gitUrl.length === 0) {
+            assert.equal("", gitUrl);
         }
+    });
+
+    test("assert that repoName is valid string", async () => {
+        findGitUrl();
+        assert.notEqual(undefined, repoName);
+        assert.equal(typeof "string", typeof repoName);
+        if (repoName.length === 0) {
+            assert.equal("", repoName);
+        }
+    });
+
+    test("testing findGitFileLines", async () => {
+        findGitFileLines();
+        assert.notEqual(undefined, gitFileLines);
+        assert.equal("object", typeof gitFileLines);
     });
 
 });
