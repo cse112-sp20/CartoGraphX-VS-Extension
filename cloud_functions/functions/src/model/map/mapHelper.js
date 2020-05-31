@@ -1,5 +1,14 @@
 module.exports = {
 
+    /**
+    * Helper function that updates a teammap based on the new teammap key
+    * and a snapshot of the file tree as it is on github
+    *
+    * @param    {string} newTeammapKey The provided teammap key which will hold
+    *   the updated teammap
+    * @param    {map} github_repo_file_trees Map of file paths to the number of
+    *   lines in that file
+    */
     updateFilesToDB: (newTeammapKey,github_repo_file_trees, files) => {
 
         let keys = Object.keys( github_repo_file_trees );
@@ -29,6 +38,17 @@ module.exports = {
 
         return file_firebase_key_list;
     },
+    
+    /**
+    * Given a list of file paths, as well as the name of the github
+    * repository, create a JSON object with the repo name as the key and a
+    * list of files as the value
+    *
+    * @param    {map} fileKeys Map with filenames as keys to be used to put into
+    *   the list
+    * @param    {string} github_repo_name Name of the github repository to be
+    *   used as the key in the created JSON object
+    */
     convertFilesToJSON: (fileKeys, github_repo_name ) => {
 
         let paths = Object.keys( fileKeys );
