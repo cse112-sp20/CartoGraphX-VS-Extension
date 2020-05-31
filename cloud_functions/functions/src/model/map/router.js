@@ -12,12 +12,21 @@ const router = require('express').Router();
 
 const mapHelper = require('./mapHelper');
 
+/**
+* Cloud function to add a teammap to firebase, given a github repository name,
+* the url to the repo, and a map from file names to the number of lines in the 
+* files
+*
+* @param    {XMLHttpRequest} req The request sent to this function which has
+*   the github repo name, url, and map of files in the body of the JSON
+*/
 router.post('/createMap', (req,res) => {
     let github_repo_name = req.body.github_repo_name;
     let github_repo_url  = req.body.github_repo_url;
     let github_repo_file_trees = req.body.github_repo_file_trees;
 
 
+    // Add modifications to the files into an object called mapObject
     let mapObject = {
         files_changes:{
             added_files:[],
