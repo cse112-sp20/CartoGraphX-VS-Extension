@@ -2,6 +2,10 @@
 
 module.exports = {
 
+    /**
+    * Retrieves data regarding teammap from the firebase database
+    * @param    {JSON object} res The response that the data will be sent in
+    */
     getItemsFromDatabase: (res,admin) => {
         let maps = [];
         let teammap = admin.database().ref('/team_maps');
@@ -23,6 +27,11 @@ module.exports = {
         });
       },
     
+      /**
+      * Returns the teammap that was just added in a JSON object
+      * 
+      * @param  {JSON object} res The teammap that was just added
+      */
       getAddedTeamMap: (res) => {
         return teammap.on('child_added', (snapshot) => {
           res.status(200).json(snapshot.val());
@@ -33,6 +42,11 @@ module.exports = {
         });
       },
 
+      /**
+      * Deletes a specified teammap based on the id passed in
+      *
+      * @param  {string} id The id of the teammap to be deleted
+      */
       deleteTeammap: (id,admin) => {
         let directoryID;
         let teammapLoc = admin.database().ref(`/team_maps/${id}`);
@@ -40,33 +54,25 @@ module.exports = {
           directoryID = snapshot.val().directory;
           let directoryLoc = admin.database().ref(`/directory_trees/${directoryID}`);
   
-          // directoryLoc.on('value', (snapshot2) => {
-          //   var fileList = snapshot2.val().fileKeys;
-          //   for (f in fileList) {
-          //     var fileKey = fileList[f];
-          //     admin.database().ref(`files/${fileKey}`).remove();
-          //   } 
-          // })
-  
           admin.database().ref(directoryLoc).remove();
           admin.database().ref(`/team_maps/${id}`).remove();
         });
       },
 
+      /**
+      * Deletes the directory pointed to by a specific teammap id
+      * This is used when updating the file structure information for
+      * the teammap
+      * 
+      * @param  {string} id The id of the teammap whose directory structure
+      *     will be updated
+      */
       deleteForUpdate: (id,admin) => {
         let directoryID;
         let teammapLoc = admin.database().ref(`/team_maps/${id}`);
         teammapLoc.once('value', (snapshot) => {
           directoryID = snapshot.val().directory;
           let directoryLoc = admin.database().ref(`/directory_trees/${directoryID}`);
-  
-          // directoryLoc.on('value', (snapshot2) => {
-          //   var fileList = snapshot2.val().fileKeys;
-          //   for (f in fileList) {
-          //     var fileKey = fileList[f];
-          //     admin.database().ref(`files/${fileKey}`).remove();
-          //   } 
-          // })
   
           admin.database().ref(directoryLoc).remove();
         });
