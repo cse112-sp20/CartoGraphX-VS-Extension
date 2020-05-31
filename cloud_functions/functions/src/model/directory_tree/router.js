@@ -10,6 +10,15 @@ const files = admin.database().ref('/files');
 
 const router = require('express').Router();
 
+
+/**
+* Cloud function to add a teammap by providing the folder name, 
+* list of files, list of folders, as well as editors and number
+* of lines in each file
+*
+* @param    {XMLHttpRequest} req The request that was sent in to this
+*     cloud function
+*/
 router.post('/addItem', (req, res) => {
       //const directory = req.body.directory;
       const github_token_id = req.body.github_token_id;
@@ -49,12 +58,21 @@ router.post('/addItem', (req, res) => {
       mapHelper.getAddedTeamMap(res,admin);
 });
 
-
+/**
+* Calls getItemsFromDatabase helper function in order to return the
+* teammaps in the database
+*
+* @param    {XMLHttpRequest} req The request sent into this cloud function
+*/
 router.get('/getItems', (req,res) => {
       mapHelper.getItemsFromDatabase(res,admin);
 });
 
-
+/**
+* Cloud function to delete a teammap based on a given id
+*
+* @param    {XMLHttpRequest} req The request sent to this cloud function
+*/
 router.delete('/delete', (req,res) =>{
       const id = req.query.id;
       mapHelper.deleteTeammap(id,admin);
@@ -64,6 +82,12 @@ router.delete('/delete', (req,res) =>{
 });
 
 
+/**
+* Cloud function to update the directory structure of a given teammap,
+* based on the teammap id and the specified directory structure
+*
+* @param    {XMLHttpRequest} req The request sent to this cloud function
+*/
 router.put('/update',(req,res) =>{
       const id = req.query.id;
       const github_token_id = req.body.github_token_id;
