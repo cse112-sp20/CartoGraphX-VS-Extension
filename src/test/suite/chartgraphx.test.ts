@@ -1,11 +1,9 @@
 import * as assert from "assert";
-import * as firebase from "firebase";
-import * as vscode from "vscode";
-import { firebaseConfig } from "../../config";
 import { createMapFunction, currentMap } from "../../chartgraphx";
 
-suite("testing chartgraphx.ts", () => {
-    //vscode.window.showInformationMessage("Start sample test");
+/** This test suite tests the types of the exported variables from chartgraphx */
+suite("type testing for chartgraphx.ts", () => {
+    /** testing if currentMap is the correct type after running createMapFunction */
     test("assert that curFile is valid string", async () => {
         createMapFunction();
         assert.notEqual(undefined, currentMap);

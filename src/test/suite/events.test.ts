@@ -1,11 +1,9 @@
 import * as assert from "assert";
-import * as firebase from "firebase";
-import * as vscode from "vscode";
-import { firebaseConfig } from "../../config";
 import { currentDocumentListener, curFile } from "../../events";
 
+/** This test suite tests the types of the exported variables from events */
 suite("testing events.ts", () => {
-    //vscode.window.showInformationMessage("Start sample test");
+    /** testing if curFile is the correct type after running currentDocumentListener */
     test("assert that curFile is valid string", async () => {
         currentDocumentListener();
         assert.notEqual(undefined, curFile);
