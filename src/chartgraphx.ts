@@ -4,7 +4,11 @@ import { auth } from "./main";
 
 export let currentMap : string = "";
 
+/**
+ * TESTING purposes 
+ */
 export const  displayCurrentWorkingFile = () => {
+
     const rootPath = (vscode.workspace.rootPath !== undefined) ? vscode.workspace.rootPath : "";
     const openFileName = vscode.window.visibleTextEditors.map((e) => e.document.fileName.replace(rootPath, ""));
     const openFileLineCount = vscode.window.visibleTextEditors.map((e) => e.document.lineCount);

@@ -32,8 +32,8 @@
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
 		"unit-test": "node ./out/test/runTest.js",
-		"e2e-test": "./node_modules/.bin/extest setup-and-run ./out/e2e-tests/*.test.js"
-
+		"e2e-test": "./node_modules/.bin/extest setup-and-run ./out/e2e-tests/*.test.js",
+		"docs": "./node_modules/.bin/jsdoc -c jsdoc.json"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
@@ -42,9 +42,12 @@
 		"@types/vscode": "^1.45.0",
 		"@typescript-eslint/eslint-plugin": "^2.30.0",
 		"@typescript-eslint/parser": "^2.30.0",
+		"better-docs": "^2.0.1",
 		"eslint": "^6.8.0",
 		"eslint-plugin-jsdoc": "^25.4.1",
 		"glob": "^7.1.6",
+		"jsdoc": "^3.6.4",
+		"jsdoc-plugin-typescript": "^2.0.5",
 		"jshint": "^2.11.1",
 		"mocha": "^7.1.2",
 		"typescript": "^3.8.3",

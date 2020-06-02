@@ -10,31 +10,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
       - name: Building JSDoc
-        uses: brunokrauss/jsdoc-action@1
+        uses: andstor/jsdoc-action@v1
         with:
-          jsdoc-path: 'src'
+          source_dir: ./src
+          output_dir: ./docs
+          config_file: jsdoc.json
+          template: minami
+          recurse: true
+          front_page: README.md
 
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-
-#       - name: Building JSDoc
-#         uses: andstor/jsdoc-action@v1
-#         with:
-#           source_dir: ./src
-#           output_dir: ./docs
-#           config_file: conf.json
-#           template: minami
-#           recurse: true
-#           front_page: README.md
-
-#       - name: Deploying to Github Page
-#         uses: peaceiris/actions-gh-pages@v3
-#         with:
-#           github_token: ${{ secrets.GITHUB_TOKEN }}
-#           publish_dir: ./docs
+      - name: Deploying to Github Page
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
