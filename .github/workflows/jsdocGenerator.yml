@@ -18,17 +18,6 @@ jobs:
         run: npm i --save-dev@latest better-docs
       - name: Building JSDoc
         run: npm run docs
-
-      # - name: Building JSDoc
-      #   uses: andstor/jsdoc-action@v1
-      #   with:
-      #     source_dir: ./src
-      #     output_dir: ./docs
-      #     config_file: jsdoc.json
-      #     template: minami
-      #     recurse: true
-      #     front_page: README.md
-
       - name: Deploying to Github Page
         uses: peaceiris/actions-gh-pages@v3
         with:
