@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as simpleGit from 'simple-git/promise';
 import { XMLHttpRequest } from 'xmlhttprequest-ts';
 import { currentMap } from './cartographx';
+import { generateWebview } from './webview';
 
 // Set the global variable gitRoot to the root of the Git repository
 export let gitRoot : string = "";
@@ -11,6 +12,7 @@ export let repoName : string = "";
 export let gitFileLines : any = {};
 export let vscodeRoot :string | undefined = vscode.workspace.rootPath;
 export let git : any = simpleGit(vscodeRoot);
+export let mapId : string = "";
 
 
 /**
@@ -105,7 +107,9 @@ export async function sendGitData(token : string) {
         if (req.readyState === XMLHttpRequest.DONE) {
             if (req.status === 200) {
                 response = JSON.parse(req.responseText);
-                vscode.window.showInformationMessage('Map successfully created! Your map key is: "' + response["data"] + '"!');
+                vscode.window.showInformationMessage('Your map key is: "' + response["data"] + '"!');
+                mapId = response["data"];
+                generateWebview(mapId);
             } else {
                 console.log("An error has occurred while communicating with the server!");
             }
@@ -113,4 +117,12 @@ export async function sendGitData(token : string) {
     };
     console.log(JSON.stringify(payload));
     req.send(JSON.stringify(payload));
+}
+
+/**
+ * Function to set the map id of the current extension
+ * @param {string} id
+ */
+export function setMapID(id : string) {
+    mapId = id;
 }
