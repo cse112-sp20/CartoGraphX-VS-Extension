@@ -10,10 +10,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      -  name: install node v12
-          uses: actions/setup-node@v1
-          with:
-            node-version: 12
+      - name: install node v12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
       - name: Installing better-docs
         run: npm i --save-dev@latest better-docs
       - name: Building JSDoc
