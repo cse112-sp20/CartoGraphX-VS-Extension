@@ -58,6 +58,6 @@ export async function loadMapFunction() {
 }
 
 export const statusBarItem = vscode.window.createStatusBarItem(undefined, 1000);
-statusBarItem.command = "chartGraphX.toolbarAction";
+statusBarItem.command = "cartoGraphX.toolbarAction";
 statusBarItem.tooltip = "CGphX commands";
 statusBarItem.text = "CGphX$(rocket)"; // to rotate icon ~spin

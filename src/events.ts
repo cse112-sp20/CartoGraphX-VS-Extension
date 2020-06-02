@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { repoName, gitUrl, gitRoot, mapId } from "./git";
 import { auth } from "./main";
 import { XMLHttpRequest } from "xmlhttprequest-ts";
-import { currentMap } from "./chartgraphx";
+import { currentMap } from "./cartographx";
 
 export let curFile : string = "";
 

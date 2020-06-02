@@ -2,7 +2,7 @@
 import * as firebase from "firebase";
 import * as vscode from "vscode";
 import { signIn, signOut, userStatus, signUp} from "./auth";
-import { displayCurrentWorkingFile, statusBarItem, createMapFunction, loadMapFunction } from "./chartgraphx";
+import { displayCurrentWorkingFile, statusBarItem, createMapFunction, loadMapFunction } from "./cartographx";
 import { firebaseConfig } from "./config";
 import { currentDocumentListener } from "./events";
 import { fetchRemoteGit, findGitFileLines, findGitFiles, findGitRoot, findGitUrl, gitRoot, sendGitData } from "./git";
