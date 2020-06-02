@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> Home</title>
+  <title> events.ts</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -83,75 +85,70 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p>Title</p>
-                    <h1>Home</h1>
+                    <p>Source</p>
+                    <h1>events.ts</h1>
                 </header>
                 
 
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
     <section>
-        <article><h1>ChartGraphX VS Code extension</h1>
-<p>The ChartGraphX VS Code extension is used to track and share user-metrics inside a team workspace to be viewed on the interactive source-code map displayed on our website. This tool will greatly increase accountability because each developer’s work will be visible in real time.</p>
-<h2>Running the extension</h2>
-<p>To run the extension you have clone the repo and open the extension folder in VS Code.<br>
-<code>git clone https://github.com/cse112-sp20/ChartGraphX-MVP-Mini-Project-2-.git</code><br>
-<code>cd ChartGraphX-MVP-Mini-Project-2-/extension</code><br>
-<code>npm i</code><br>
-<code>code .</code></p>
-<p>Then, press F5 to open a new window with your extension loaded.<br>
-Open one of your workspaces.<br>
-Run the extension command by pressing the CGphX button on your status bar (bottom bar).</p>
-<h2>Features</h2>
-<p>To view the extension commands, press the CGphX button on your status bar (bottom bar). This will prompt a dropdown menu in your IDE providing you with the available commands.</p>
-<p>ChartGraphX provides commands to sign up/in/out of the service using email and password. The color of the CGphX button indicates wether the extension is active or not.</p>
-<p>When signed in, you have the ability to check user credentials, as well as running the displayCurrentWorkingFile() command.</p>
-<h2>Testing</h2>
-<p>To run the unit tests, first run the command:<br>
-<code>npm run pretest</code></p>
-<p>Then, through the &quot;Run &amp; Debug&quot; window choose &quot;Extension Tests&quot; and press the start debugging button.</p>
-<h2>Requirements</h2>
-<p>If you have any requirements or dependencies, add a section describing those and how to install and configure them.</p>
-<h2>Extension Settings</h2>
-<p>Include if your extension adds any VS Code settings through the <code>contributes.configuration</code> extension point.</p>
-<p>For example:</p>
-<p>This extension contributes the following settings:</p>
-<ul>
-<li><code>myExtension.enable</code>: enable/disable this extension</li>
-<li><code>myExtension.thing</code>: set to <code>blah</code> to do something</li>
-</ul>
-<h2>Known Issues</h2>
-<p>Calling out known issues can help limit users opening duplicate issues against your extension.</p>
-<h2>Release Notes</h2>
-<p>Users appreciate release notes as you update your extension.</p>
-<h3>1.0.0</h3>
-<p>Initial release of ...</p>
-<h3>1.0.1</h3>
-<p>Fixed issue #.</p>
-<h3>1.1.0</h3>
-<p>Added features X, Y, and Z.</p></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as vscode from "vscode";
+import { repoName, gitUrl, gitRoot } from "./git";
+import { auth } from "./main";
+import { XMLHttpRequest } from "xmlhttprequest-ts";
+
+export let curFile : string = "";
+
+/**
+ * This function sends the current file that the user has open to the backend endpoint.
+ * 
+ * @param token the id token of the user
+ * @param file the current file that the user has open
+ */
+async function sendCurrentFile(token : string, file : string) {
+    let payload : any = {};
+    payload["github_repo_name"] = repoName;
+    payload["github_repo_url"] = gitUrl;
+    payload["filepath"] = file;
+    let req = new XMLHttpRequest();
+    req.open('POST', 'https://us-central1-remote-13.cloudfunctions.net/api/map/currentEdit', true);
+    req.setRequestHeader('idToken', token);
+    req.setRequestHeader('Content-Type', 'application/json');
+    req.send(JSON.stringify(payload));
+    //console.log("Sent current file to the server!");
+}
+
+/**
+ * This function listens for any changes in the text editor and gets the current file open.
+ */
+export async function currentDocumentListener() {
+    /** Adds an event listener for changes to the user's current editing file. */
+    vscode.window.onDidChangeActiveTextEditor((openEditor : vscode.TextEditor | undefined) => {
+        if (openEditor !== undefined &amp;&amp; gitRoot !== "") {
+            curFile = openEditor.document.uri.path.split(vscode.Uri.file(gitRoot).path + '/')[1];
+        }
+        else if (openEditor === undefined) {
+            curFile = "";
+        }
+        if (curFile !== "") {
+            let token = auth.currentUser?.getIdToken();
+            if (token) {
+                token.then(value => {
+                    sendCurrentFile(value, curFile);
+                });
+                token.catch(error => {
+                    vscode.window.showErrorMessage('Error: Unable to communicate with server!');
+                });
+            } 
+        }
+    });
+}
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
