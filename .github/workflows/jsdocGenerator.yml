@@ -15,12 +15,13 @@ jobs:
         uses: andstor/jsdoc-action@v1
         with:
           source_dir: ./src
-          output_dir: ./out
+          output_dir: ./docs
           template: minami
+          recurse: true
           front_page: README.md
 
       - name: Deploying to Github Page
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out
+          publish_dir: ./docs
