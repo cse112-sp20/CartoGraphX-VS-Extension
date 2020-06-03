@@ -33,7 +33,6 @@
 		"pretest": "npm run compile && npm run lint",
 		"unit-test": "node ./out/test/runTest.js",
 		"e2e-test": "./node_modules/.bin/extest setup-and-run ./out/e2e-tests/*.test.js"
-
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
@@ -89,7 +88,10 @@
 		]
 	},
 	"dependencies": {
+		"decache": "^4.6.0",
 		"firebase": "^7.14.3",
+		"istanbul": "^0.4.5",
+		"remap-istanbul": "^0.13.0",
 		"simple-git": "^2.5.0",
 		"xmlhttprequest-ts": "^1.0.1"
 	}

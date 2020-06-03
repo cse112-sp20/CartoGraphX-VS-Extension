@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { createMapFunction, currentMap } from "../../cartographx";
+import { createMapFunction, currentMap } from "../../src/cartographx";
 
 /** This test suite tests the types of the exported variables from chartgraphx */
 suite("type testing for chartgraphx.ts", () => {
@@ -8,7 +8,6 @@ suite("type testing for chartgraphx.ts", () => {
         createMapFunction();
         assert.notEqual(undefined, currentMap);
         assert.equal(typeof "string", typeof currentMap);
-        console.log(currentMap);
         if (currentMap.length === 0) {
             assert.equal("", currentMap);
         }
