@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { currentDocumentListener, curFile } from "../../events";
+import { currentDocumentListener, curFile } from "../../src/events";
 
 /** This test suite tests the types of the exported variables from events */
 suite("testing events.ts", () => {
@@ -8,7 +8,6 @@ suite("testing events.ts", () => {
         currentDocumentListener();
         assert.notEqual(undefined, curFile);
         assert.equal(typeof "string", typeof curFile);
-        console.log(curFile);
         if (curFile.length === 0) {
             assert.equal("", curFile);
         }

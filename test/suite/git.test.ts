@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { findGitFileLines, findGitFiles, findGitRoot, findGitUrl, gitRoot, gitFilesArray, gitUrl, repoName, gitFileLines } from "../../git";
+import { findGitFileLines, findGitFiles, findGitRoot, findGitUrl, gitRoot, gitFilesArray, gitUrl, repoName, gitFileLines } from "../../src/git";
 
 /** This test suite tests the types of the exported variables from gitRoot */
 suite("testing git.ts", () => {
