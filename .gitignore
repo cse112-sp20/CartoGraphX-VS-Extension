@@ -4,3 +4,4 @@ node_modules
 *.vsix
 src/config.ts
 test-resources
+coverage/
