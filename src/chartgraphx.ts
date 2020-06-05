@@ -16,6 +16,7 @@ export const  displayCurrentWorkingFile = () => {
     vscode.window.showInformationMessage("Currently in file: " + openFileName + "\n\nLines in file: " + openFileLineCount, { modal: true });
 };
 
+
 export async function createMapFunction() {
     const mapname = await vscode.window.showInputBox({placeHolder: "map name"});
     if (mapname !== "" && mapname !== undefined) {
