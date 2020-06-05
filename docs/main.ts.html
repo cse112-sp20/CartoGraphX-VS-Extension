@@ -78,7 +78,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#activate">activate</a></li><li><a href="global.html#currentDocumentListener">currentDocumentListener</a></li><li><a href="global.html#deactivate">deactivate</a></li><li><a href="global.html#displayCurrentWorkingFile">displayCurrentWorkingFile</a></li><li><a href="global.html#fetchRemoteGit">fetchRemoteGit</a></li><li><a href="global.html#findGitFileLines">findGitFileLines</a></li><li><a href="global.html#findGitFiles">findGitFiles</a></li><li><a href="global.html#findGitRoot">findGitRoot</a></li><li><a href="global.html#findGitUrl">findGitUrl</a></li><li><a href="global.html#hi">hi</a></li><li><a href="global.html#sendCurrentFile">sendCurrentFile</a></li><li><a href="global.html#sendGitData">sendGitData</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signOut">signOut</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#userStatus">userStatus</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#activate">activate</a></li><li><a href="global.html#createMapFunction">createMapFunction</a></li><li><a href="global.html#currentDocumentListener">currentDocumentListener</a></li><li><a href="global.html#deactivate">deactivate</a></li><li><a href="global.html#displayCurrentWorkingFile">displayCurrentWorkingFile</a></li><li><a href="global.html#fetchRemoteGit">fetchRemoteGit</a></li><li><a href="global.html#findGitFileLines">findGitFileLines</a></li><li><a href="global.html#findGitFiles">findGitFiles</a></li><li><a href="global.html#findGitRoot">findGitRoot</a></li><li><a href="global.html#findGitUrl">findGitUrl</a></li><li><a href="global.html#generateWebview">generateWebview</a></li><li><a href="global.html#loadMapFunction">loadMapFunction</a></li><li><a href="global.html#sendCurrentFile">sendCurrentFile</a></li><li><a href="global.html#sendGitData">sendGitData</a></li><li><a href="global.html#setMapID">setMapID</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signOut">signOut</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#userStatus">userStatus</a></li></ul></div>
                 
             </nav>
         </div>
@@ -99,20 +99,16 @@
 import * as firebase from "firebase";
 import * as vscode from "vscode";
 import { signIn, signOut, userStatus, signUp} from "./auth";
-import { displayCurrentWorkingFile, statusBarItem, createMapFunction } from "./chartgraphx";
+import { displayCurrentWorkingFile, statusBarItem, createMapFunction, loadMapFunction } from "./cartographx";
 import { firebaseConfig } from "./config";
 import { currentDocumentListener } from "./events";
 import { fetchRemoteGit, findGitFileLines, findGitFiles, findGitRoot, findGitUrl, gitRoot, sendGitData } from "./git";
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 export const auth = firebase.auth();
-
-findGitRoot();
-fetchRemoteGit();
-findGitFiles();
-findGitUrl();
-findGitFileLines();
 
 
 /**
@@ -121,6 +117,12 @@ findGitFileLines();
  * @param  {vscode.ExtensionContext} context
  */
 export function activate(context: vscode.ExtensionContext) {
+    findGitRoot();
+    fetchRemoteGit();
+    findGitFiles();
+    findGitUrl();
+    findGitFileLines();
+
     vscode.window.showInformationMessage("ChartGraphX is now active!");
     statusBarItem.show();
 
@@ -132,7 +134,8 @@ export function activate(context: vscode.ExtensionContext) {
                     { label: "Display Current Working File", undefined, target: displayCurrentWorkingFile },
                     { label: "Get user info", undefined, target: userStatus },
                     { label: "Sign out", description: "Stop ChartGraphX tracking", target: signOut },
-                    { label: "Create map", descrition: "Create a map", undefined, target: createMapFunction}
+                    { label: "Create map", descrition: "Create a map", undefined, target: createMapFunction},
+                    { label: "Load map", description: "Load a map", undefined, target: loadMapFunction}
                 ],
                 { placeHolder: "ChartGraphX commands" }
             ).then( (method) => {

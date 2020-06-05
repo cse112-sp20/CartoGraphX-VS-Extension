@@ -1,6 +1,6 @@
 {
 	"name": "extension",
-	"displayName": "ChartGraphX",
+	"displayName": "CartoGraphX",
 	"description": "Tracks data to be displayed on an interactive map of the source code. Visualization is aimed to make people understand the entire scope of their project and see what part of the project their team members are working on",
 	"publisher": "remote13",
 	"version": "0.0.1",
@@ -9,7 +9,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/cse112-sp20/ChartGraphX-VS-code-extension-MVP"
+		"url": "https://github.com/cse112-sp20/CartoGraphX-VS-Extension"
 	},
 	"categories": [
 		"Other"
@@ -21,7 +21,7 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "chartGraphX.toolbarAction",
+				"command": "cartoGraphX.toolbarAction",
 				"title": "Display CGphX Commands"
 			}
 		]
@@ -48,8 +48,11 @@
 		"glob": "^7.1.6",
 		"jsdoc": "^3.6.4",
 		"jsdoc-plugin-typescript": "^2.0.5",
+		"decache": "^4.6.0",
+		"istanbul": "^0.4.5",
 		"jshint": "^2.11.1",
 		"mocha": "^7.1.2",
+		"remap-istanbul": "^0.13.0",
 		"typescript": "^3.8.3",
 		"vscode-extension-tester": "^3.0.1",
 		"vscode-test": "^1.3.0"

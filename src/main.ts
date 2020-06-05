@@ -2,20 +2,16 @@
 import * as firebase from "firebase";
 import * as vscode from "vscode";
 import { signIn, signOut, userStatus, signUp} from "./auth";
-import { displayCurrentWorkingFile, statusBarItem, createMapFunction } from "./chartgraphx";
+import { displayCurrentWorkingFile, statusBarItem, createMapFunction, loadMapFunction } from "./cartographx";
 import { firebaseConfig } from "./config";
 import { currentDocumentListener } from "./events";
 import { fetchRemoteGit, findGitFileLines, findGitFiles, findGitRoot, findGitUrl, gitRoot, sendGitData } from "./git";
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 export const auth = firebase.auth();
-
-findGitRoot();
-fetchRemoteGit();
-findGitFiles();
-findGitUrl();
-findGitFileLines();
 
 
 /**
@@ -24,6 +20,12 @@ findGitFileLines();
  * @param  {vscode.ExtensionContext} context
  */
 export function activate(context: vscode.ExtensionContext) {
+    findGitRoot();
+    fetchRemoteGit();
+    findGitFiles();
+    findGitUrl();
+    findGitFileLines();
+
     vscode.window.showInformationMessage("ChartGraphX is now active!");
     statusBarItem.show();
 
@@ -35,7 +37,8 @@ export function activate(context: vscode.ExtensionContext) {
                     { label: "Display Current Working File", undefined, target: displayCurrentWorkingFile },
                     { label: "Get user info", undefined, target: userStatus },
                     { label: "Sign out", description: "Stop ChartGraphX tracking", target: signOut },
-                    { label: "Create map", descrition: "Create a map", undefined, target: createMapFunction}
+                    { label: "Create map", descrition: "Create a map", undefined, target: createMapFunction},
+                    { label: "Load map", description: "Load a map", undefined, target: loadMapFunction}
                 ],
                 { placeHolder: "ChartGraphX commands" }
             ).then( (method) => {
