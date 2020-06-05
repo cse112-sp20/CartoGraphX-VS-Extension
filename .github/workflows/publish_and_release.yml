@@ -5,9 +5,22 @@ on:
     push:
         branches: master
 jobs:
+    check_tag:
+        name: Check current tag 
+        runs-on: ubuntu-18.04
+        steps:
+        -   uses: actions/checkout@v1
+        -   name: Get previous tag
+            id: prev_tag
+            uses: WyriHaximus/github-action-get-previous-tag@master
+            env:
+                GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+        outputs:
+            tag: ${{ steps.prev_tag.outputs.tag }}
     release:
         name: Release and Publish
         runs-on: ubuntu-18.04
+        needs: check_tag
         steps:
         -   name: Checkout
             uses: actions/checkout@v2
@@ -23,19 +36,13 @@ jobs:
                 NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
             run: npx semantic-release@latest
 
-            # Step for committing the version change in package.json
-        -   name: Auto committing package.json
-            uses: stefanzweifel/git-auto-commit-action@v4.1.6
-            with:
-                commit_message: "Updated package.json version"
-                push_options: --force
     publish:
         name: Publish
         runs-on: ubuntu-18.04
-        needs: release
+        needs: [release, check_tag]
         steps:
         -   name: Checkout
-            uses: actions/checkout@v2
+            uses: actions/checkout@v1
         -   name: Setup Node.js
             uses: actions/setup-node@v1
             with:
@@ -47,9 +54,19 @@ jobs:
         -   name: Add Firebase config key
             run: echo `sed 's/API_KEY/${{ secrets.FIREBASE_KEY }}/' src/config.ts` > src/config.ts
 
+        -   name: Get Current tag
+            id: current_tag
+            uses: WyriHaximus/github-action-get-previous-tag@master
+            env:
+                GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+    
+            # Step for setting the current version into package.json
+        -   name: Set current version
+            run: echo `sed 's/0.0.1/${{ steps.current_tag.outputs.tag }}/' package.json` > package.json
+
             # Step for publishing extension to VS Marketplace
         -   name: Vscode release plugin
-            if: ${{ needs.release.outputs.changes_detected }}
+            if: ${{ needs.check_tag.outputs.tag != steps.current_tag.outputs.tag }}
             uses: JCofman/vscodeaction@master
             env:
                 PUBLISHER_TOKEN: ${{ secrets.PUBLISHER_TOKEN }}
