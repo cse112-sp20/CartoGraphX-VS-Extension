@@ -3,12 +3,12 @@ name: codacy-code-checker
 on: ["push"]
 
 jobs:
-  codacy-coverage-reporter:
+  codacy-analysis-cli:
     runs-on: ubuntu-latest
-    name: codacy-coverage-reporter
+    name: codacy-analysis-cli
     steps:
       - uses: actions/checkout@master
-      - name: Run codacy-coverage-reporter
-        uses: codacy/codacy-coverage-reporter-action@master
+      - name: Run codacy-analysis-cli
+        uses: mrfyda/codacy-analysis-cli-action@master
         with:
           project-token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
