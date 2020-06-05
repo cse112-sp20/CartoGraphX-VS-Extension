@@ -78,7 +78,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#activate">activate</a></li><li><a href="global.html#currentDocumentListener">currentDocumentListener</a></li><li><a href="global.html#deactivate">deactivate</a></li><li><a href="global.html#displayCurrentWorkingFile">displayCurrentWorkingFile</a></li><li><a href="global.html#fetchRemoteGit">fetchRemoteGit</a></li><li><a href="global.html#findGitFileLines">findGitFileLines</a></li><li><a href="global.html#findGitFiles">findGitFiles</a></li><li><a href="global.html#findGitRoot">findGitRoot</a></li><li><a href="global.html#findGitUrl">findGitUrl</a></li><li><a href="global.html#sendCurrentFile">sendCurrentFile</a></li><li><a href="global.html#sendGitData">sendGitData</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signOut">signOut</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#userStatus">userStatus</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#activate">activate</a></li><li><a href="global.html#createMapFunction">createMapFunction</a></li><li><a href="global.html#currentDocumentListener">currentDocumentListener</a></li><li><a href="global.html#deactivate">deactivate</a></li><li><a href="global.html#displayCurrentWorkingFile">displayCurrentWorkingFile</a></li><li><a href="global.html#fetchRemoteGit">fetchRemoteGit</a></li><li><a href="global.html#findGitFileLines">findGitFileLines</a></li><li><a href="global.html#findGitFiles">findGitFiles</a></li><li><a href="global.html#findGitRoot">findGitRoot</a></li><li><a href="global.html#findGitUrl">findGitUrl</a></li><li><a href="global.html#generateWebview">generateWebview</a></li><li><a href="global.html#loadMapFunction">loadMapFunction</a></li><li><a href="global.html#sendCurrentFile">sendCurrentFile</a></li><li><a href="global.html#sendGitData">sendGitData</a></li><li><a href="global.html#setMapID">setMapID</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signOut">signOut</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#userStatus">userStatus</a></li></ul></div>
                 
             </nav>
         </div>
@@ -109,7 +109,7 @@ export const signIn = async (auth: firebase.auth.Auth) => {
     const password = await vscode.window.showInputBox({placeHolder: "password", password: true}); // 'testPassword'
     auth.signInWithEmailAndPassword(email !== undefined ? email : "", password !== undefined ? password : "")
         // tslint:disable-next-line: max-line-length
-        .then( (res) => vscode.window.showInformationMessage("You are now signed to ChartGraphX as: " + auth.currentUser?.email))
+        .then( (res) => vscode.window.showInformationMessage("You are now signed to CartoGraphX as: " + auth.currentUser?.email))
         .catch((error: { code: any; message: any; }) => {
             vscode.window.showWarningMessage(error.message);
         },
@@ -124,7 +124,7 @@ export const signIn = async (auth: firebase.auth.Auth) => {
  */
 export const signOut = (auth: firebase.auth.Auth) => {
     auth.signOut()
-        .then( (res) => vscode.window.showInformationMessage("You are now signed out of ChartGraphX!"))
+        .then( (res) => vscode.window.showInformationMessage("You are now signed out of CartoGraphX!"))
         .catch((error: { code: string; message: string; }) => {
             vscode.window.showWarningMessage(error.message);
     });
