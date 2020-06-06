@@ -1,0 +1,25 @@
+# Github action workflow that will post the results of the code coverage checker to Codecov.
+
+name: Test Coverage checker
+on: push
+jobs:
+    codecov: 
+        name: Run Coverage Checker/Publish to Codecov
+        runs-on: macos-latest
+        steps:
+        -   uses: actions/checkout@v1
+        -   name: Install Node.js
+            uses: actions/setup-node@v1
+            with:
+                node-version: '10.x'
+        -   run: npm install
+        -   run: echo `sed 's/API_KEY/${{ secrets.FIREBASE_KEY }}/' src/config.ts` > src/config.ts
+        -   run: npm run compile
+        -   name: run tests w/ coverage
+            run: npm run unit-test
+        -   name: send to Codecov
+            uses: codecov/codecov-action@v1
+            with:
+                token: ${{ secrets.CODECOV_TOKEN }}
+                file: coverage/clover.xml
+                flags: unittests

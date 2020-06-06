@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
-import { repoName, gitUrl, gitRoot } from "./git";
+import { repoName, gitUrl, gitRoot, mapId } from "./git";
 import { auth } from "./main";
 import { XMLHttpRequest } from "xmlhttprequest-ts";
+import { currentMap } from "./cartographx";
 
 export let curFile : string = "";
 
@@ -15,10 +16,12 @@ async function sendCurrentFile(token : string, file : string) {
     let payload : any = {};
     payload["github_repo_name"] = repoName;
     payload["github_repo_url"] = gitUrl;
+    payload["map_key"] = mapId;
     payload["filepath"] = file;
     let req = new XMLHttpRequest();
-    req.open('POST', 'https://webhook.site/590847c9-aff0-430b-9817-42034801fc7d', true);
+    req.open('POST', 'https://us-central1-remote-13.cloudfunctions.net/api/map/currentEdit', true);
     req.setRequestHeader('idToken', token);
+    req.setRequestHeader('Content-Type', 'application/json');
     req.send(JSON.stringify(payload));
     //console.log("Sent current file to the server!");
 }

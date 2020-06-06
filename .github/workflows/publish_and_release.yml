@@ -1,0 +1,74 @@
+# Github action workflow that will Release and Publish
+
+name: Release and Publish
+on:
+    push:
+        branches: master
+jobs:
+    check_tag:
+        name: Check current tag 
+        runs-on: ubuntu-18.04
+        steps:
+        -   uses: actions/checkout@v1
+        -   name: Get previous tag
+            id: prev_tag
+            uses: WyriHaximus/github-action-get-previous-tag@master
+            env:
+                GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+        outputs:
+            tag: ${{ steps.prev_tag.outputs.tag }}
+    release:
+        name: Release and Publish
+        runs-on: ubuntu-18.04
+        needs: check_tag
+        steps:
+        -   name: Checkout
+            uses: actions/checkout@v2
+        -   name: Setup Node.js
+            uses: actions/setup-node@v1
+            with:
+                node-version: 12
+        -   name: Install dependencies
+            run: npm install
+        -   name: Release
+            env:
+                GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+                NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+            run: npx semantic-release@latest
+
+    publish:
+        name: Publish
+        runs-on: ubuntu-18.04
+        needs: [release, check_tag]
+        steps:
+        -   name: Checkout
+            uses: actions/checkout@v1
+        -   name: Setup Node.js
+            uses: actions/setup-node@v1
+            with:
+                node-version: 12
+        -   name: Install dependencies
+            run: npm install
+
+            # Step for setting the config key into src/config.ts
+        -   name: Add Firebase config key
+            run: echo `sed 's/API_KEY/${{ secrets.FIREBASE_KEY }}/' src/config.ts` > src/config.ts
+
+        -   name: Get Current tag
+            id: current_tag
+            uses: WyriHaximus/github-action-get-previous-tag@master
+            env:
+                GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+
+            # Step for setting the current version into package.json
+        -   name: Set current version
+            run: echo ${{ steps.current_tag.outputs.tag }} | cut -b 2- | xargs -I '{}' sed -i 's/0.0.1/{}/' package.json
+
+            # Step for publishing extension to VS Marketplace
+        -   name: Vscode release plugin
+            if: ${{ needs.check_tag.outputs.tag != steps.current_tag.outputs.tag }}
+            uses: JCofman/vscodeaction@master
+            env:
+                PUBLISHER_TOKEN: ${{ secrets.PUBLISHER_TOKEN }}
+            with:
+                args: publish -p $PUBLISHER_TOKEN

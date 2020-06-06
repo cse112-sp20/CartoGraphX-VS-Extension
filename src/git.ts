@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import * as simpleGit from 'simple-git/promise';
 import { XMLHttpRequest } from 'xmlhttprequest-ts';
+import { currentMap } from './cartographx';
+import { generateWebview } from './webview';
 
 // Set the global variable gitRoot to the root of the Git repository
 export let gitRoot : string = "";
@@ -10,6 +12,7 @@ export let repoName : string = "";
 export let gitFileLines : any = {};
 export let vscodeRoot :string | undefined = vscode.workspace.rootPath;
 export let git : any = simpleGit(vscodeRoot);
+export let mapId : string = "";
 
 
 /**
@@ -91,12 +94,35 @@ export async function findGitFileLines() {
  */
 export async function sendGitData(token : string) {
     let payload : any = {};
+    let response : any = {};
+    payload["map_name"] = currentMap;
     payload["github_repo_name"] = repoName;
     payload["github_repo_url"] = gitUrl;
     payload["github_repo_file_trees"] = gitFileLines;
     let req = new XMLHttpRequest();
-    req.open('POST', 'https://webhook.site/590847c9-aff0-430b-9817-42034801fc7d', true);
+    req.open('POST', 'https://us-central1-remote-13.cloudfunctions.net/api/map/createMap', true);
     req.setRequestHeader('idToken', token);
+    req.setRequestHeader('Content-Type', 'application/json');
+    req.onreadystatechange = function() {
+        if (req.readyState === XMLHttpRequest.DONE) {
+            if (req.status === 200) {
+                response = JSON.parse(req.responseText);
+                vscode.window.showInformationMessage('Your map key is: "' + response["data"] + '"!');
+                mapId = response["data"];
+                generateWebview(mapId);
+            } else {
+                console.log("An error has occurred while communicating with the server!");
+            }
+        }
+    };
+    console.log(JSON.stringify(payload));
     req.send(JSON.stringify(payload));
-    //console.log('Sent git data to server!');
+}
+
+/**
+ * Function to set the map id of the current extension
+ * @param {string} id
+ */
+export function setMapID(id : string) {
+    mapId = id;
 }
