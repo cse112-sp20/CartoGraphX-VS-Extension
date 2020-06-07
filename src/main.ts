@@ -1,15 +1,21 @@
 /* eslint-disable no-unused-expressions */
 import * as firebase from "firebase";
+import * as firebaseAdmin from "firebase-admin";
 import * as vscode from "vscode";
+import {firebaseAuthConfig} from "./authconfig";
 import { signIn, signOut, userStatus, signUp} from "./auth";
 import { displayCurrentWorkingFile, statusBarItem, createMapFunction } from "./chartgraphx";
 import { firebaseConfig } from "./config";
 import { currentDocumentListener } from "./events";
 import { fetchRemoteGit, findGitFileLines, findGitFiles, findGitRoot, findGitUrl, gitRoot, sendGitData } from "./git";
 
-// Initialize Firebase
+// Initialize Firebase and Firebase Admin.
 firebase.initializeApp(firebaseConfig);
+export const admin = firebaseAdmin.initializeApp({
+    credential: firebaseAdmin.credential.cert(firebaseAuthConfig),
+});
 export const auth = firebase.auth();
+
 
 findGitRoot();
 fetchRemoteGit();
@@ -24,8 +30,25 @@ findGitFileLines();
  * @param  {vscode.ExtensionContext} context
  */
 export function activate(context: vscode.ExtensionContext) {
-    vscode.window.showInformationMessage("ChartGraphX is now active!");
+    vscode.window.showInformationMessage("CartoGraphX is now active!");
     statusBarItem.show();
+
+
+    // Undefined or empty string if the user is logged out, string if the user is logged in. 
+     const userToken : string | undefined = context.globalState.get("cartoGraphXUser");
+
+     console.log("On activation, cartoGraphXUser is: " + userToken);
+
+    // Logs user in using token if the user has not explicitly signed out. 
+    if(userToken !== undefined && userToken !== "") {
+
+        console.log("Good credentials. Loggining in with token.");
+        
+        // If the user has not explicitly signed off, log them in with their token. 
+        auth.signInWithCustomToken(userToken).catch( (error) => {
+            vscode.window.showErrorMessage("Error: Something went wrong with loging in with tokens.");
+        });
+    }
 
     /** This command displays a quickpick in the IDE window that allows the user to choose between available commands */
     const disposable = vscode.commands.registerCommand("chartGraphX.toolbarAction", async () => {
@@ -39,7 +62,9 @@ export function activate(context: vscode.ExtensionContext) {
                 ],
                 { placeHolder: "ChartGraphX commands" }
             ).then( (method) => {
-                method?.target(auth);
+                
+                // Might cause a bug w/ the different param types.                 
+                method?.target(auth, context);
             });
         } else {
             vscode.window.showQuickPick([
@@ -48,7 +73,7 @@ export function activate(context: vscode.ExtensionContext) {
                 ],
                 { placeHolder: "Sign in or create a new ChartGraphX user" }
             ).then( (method) => {
-                method?.target(auth);
+                method?.target(auth, context);
             });
         }
     });
@@ -78,7 +103,7 @@ export function activate(context: vscode.ExtensionContext) {
                 vscode.window.showErrorMessage("Not currently in a Git repository!");
             }
         }
-        console.log(JSON.stringify(firebaseUser, null, 2));
+        //console.log(JSON.stringify(firebaseUser, null, 2));
     });
     
 }
