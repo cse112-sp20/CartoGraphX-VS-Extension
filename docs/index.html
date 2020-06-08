@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Home</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                <div class="dropdown is-hoverable is-right">
+                    <a class="dropdown-trigger link">
+                        Tutorials
+                        <i class="fas fa-chevron-down fa-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-content">
+                        
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#activate">activate</a></li><li><a href="global.html#createMapFunction">createMapFunction</a></li><li><a href="global.html#currentDocumentListener">currentDocumentListener</a></li><li><a href="global.html#deactivate">deactivate</a></li><li><a href="global.html#displayCurrentWorkingFile">displayCurrentWorkingFile</a></li><li><a href="global.html#fetchRemoteGit">fetchRemoteGit</a></li><li><a href="global.html#findGitFileLines">findGitFileLines</a></li><li><a href="global.html#findGitFiles">findGitFiles</a></li><li><a href="global.html#findGitRoot">findGitRoot</a></li><li><a href="global.html#findGitUrl">findGitUrl</a></li><li><a href="global.html#generateWebview">generateWebview</a></li><li><a href="global.html#loadMapFunction">loadMapFunction</a></li><li><a href="global.html#sendCurrentFile">sendCurrentFile</a></li><li><a href="global.html#sendGitData">sendGitData</a></li><li><a href="global.html#setMapID">setMapID</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signOut">signOut</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#userStatus">userStatus</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Title</p>
+                    <h1>Home</h1>
+                </header>
+                
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>CartoGraphX VS Code extension</h1>
+<p>The CartoGraphX VS Code extension is used to track and share user-metrics inside a team workspace to be viewed on the interactive source-code map displayed on our website. This tool will greatly increase accountability because each developer’s work will be visible in real time.</p>
+<h2>Running the extension</h2>
+<p>To run the extension you have clone the repo and open the extension folder in VS Code.<br>
+<code>git clone https://github.com/cse112-sp20/CartoGraphX-VS-Extension.git</code><br>
+<code>cd CartoGraphX-VS-Extension</code>	
+<code>npm i</code><br>
+<code>code .</code></p>
+<p>Then, press F5 to open a new window with your extension loaded.<br>
+Open one of your workspaces.<br>
+Run the extension command by pressing the CGphX button on your status bar (bottom bar).</p>
+<h2>Features</h2>
+<p><img align="right" src="/readme.img/CGphx_proto.png" alt="prototypes"
+	title="CartoGraphX" width="50%" />
+To view the extension commands, press the CGphX button on your status bar (bottom bar). This will prompt a dropdown menu in your IDE providing you with the available commands.</p>
+<p>CartoGraphX provides commands to sign up/in/out of the service using email and password. The color of the CGphX button indicates wether the extension is active or not.</p>
+<p>When signed in, you have the ability to check user credentials, as well as running the displayCurrentWorkingFile() command.</p>
+<h2>Testing</h2>
+<p>To run the unit tests, first run the command:<br>
+<code>npm run pretest</code></p>
+<p>Then, through the &quot;Run &amp; Debug&quot; window choose &quot;Extension Tests&quot; and press the start debugging button.</p>
+<h2>Requirements</h2>
+<p>If you have any requirements or dependencies, add a section describing those and how to install and configure them.</p>
+<h2>Extension Settings</h2>
+<p>Include if your extension adds any VS Code settings through the <code>contributes.configuration</code> extension point.</p>
+<p>For example:</p>
+<p>This extension contributes the following settings:</p>
+<ul>
+<li><code>myExtension.enable</code>: enable/disable this extension</li>
+<li><code>myExtension.thing</code>: set to <code>blah</code> to do something</li>
+</ul>
+<h2>Known Issues</h2>
+<p>Calling out known issues can help limit users opening duplicate issues against your extension.</p>
+<h2>Release Notes</h2>
+<p>Users appreciate release notes as you update your extension.</p>
+<h3>1.0.0</h3>
+<p>Initial release of ...</p>
+<h3>1.0.1</h3>
+<p>Fixed issue #.</p>
+<h3>1.1.0</h3>
+<p>Added features X, Y, and Z.</p></article>
+    </section>
+
+
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+name: GitHub pages
+on:
+  push:
+    branches:
+      - build/JSDoc
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: install node v12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Installing better-docs
+        run: npm i --save-dev@latest better-docs
+      - name: Building JSDoc
+        run: npm run docs
+      - name: Deploying to Github Page
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
