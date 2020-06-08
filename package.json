@@ -18,7 +18,7 @@
 		"*"
 	],
 	"homepage": "https://github.com/cse112-sp20/CartoGraphX-VS-Extension/blob/master/vsc-extension-quickstart.md",
-	"main": "./out/main.js",
+	"main": "./out/src/main.js",
 	"contributes": {
 		"commands": [
 			{
