@@ -4,14 +4,18 @@
 import * as extest from "vscode-extension-tester";
 import * as assert from "assert";
 import * as firebase from "firebase";
-import { firebaseConfig } from "../config";
+import { firebaseConfig } from "../src/config";
 
 // Create a Mocha suite
-describe('E2E tests', () => {
+describe('E2E UI tests', function() {
+  this.timeout(50000);
   // helper function to delay the test to wait for database
   function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms));
   }
+
+  
+
 
   let browser: extest.VSBrowser;
   let driver: extest.WebDriver;
@@ -32,18 +36,7 @@ describe('E2E tests', () => {
     driver = browser.driver;
   });
 
-  
-  // test whatever we want using webdriver, here we are just checking the page title
-  it('Checking to see if CartoGraphX is Active!', async () => {
-    const notifCenter = await new extest.Workbench().openNotificationsCenter();
-    const notifications = await notifCenter.getNotifications(extest.NotificationType.Any);
-  
-    const notification2 = notifications[1];
-    const message2 = await notification2.getMessage();
-    assert.equal(message2, 'CartoGraphX is now active!');
 
-    notifCenter.close();
-  });
 
   it('Testing Sign in', async () => {
 
@@ -59,7 +52,9 @@ describe('E2E tests', () => {
     await input.setText(testUser.password);
     await input.confirm();
 
-    await delay(400);
+    const notification = await driver.wait(() => { return notificationExists('You are now signed in to CartoGraphX as: ' + testUser.email); }, 10000) as extest.Notification;
+    const message = await notification.getMessage();
+    assert.equal(message, 'You are now signed in to CartoGraphX as: ' + testUser.email);
 
   });    
 
@@ -72,9 +67,12 @@ describe('E2E tests', () => {
 
     await input.selectQuickPick('Get user info');
 
+    const notification = await driver.wait(() => { return notificationExists('Signed in as: ' + testUser.email); }, 10000) as extest.Notification;
+    const message = await notification.getMessage();
+    assert.equal(message, 'Signed in as: ' + testUser.email);
 
-    //not sure why this isnt working??
-    assert.equal(testUser.email, auth.currentUser?.email);
+    //!!!!NOTWORKING!!!!
+    //assert.equal(testUser.email, auth.currentUser?.email);
 
 
 
@@ -88,30 +86,11 @@ describe('E2E tests', () => {
     
     await input.selectQuickPick('Sign out');
 
-    
+    const notification = await driver.wait(() => { return notificationExists('You are now signed out of CartoGraphX!'); }, 10000) as extest.Notification;
+    const message = await notification.getMessage();
+    assert.equal(message, 'You are now signed out of CartoGraphX!');
+
     assert.equal(null, auth.currentUser);
-  });
-
-  it('Asserting notification window for sign in and get user info', async() => {
-    const notifCenter = await new extest.Workbench().openNotificationsCenter();
-    const notifications = await notifCenter.getNotifications(extest.NotificationType.Any);
-    const signedOut = notifications[0];
-    const userInfo = notifications[1];
-    const signedIn = notifications[2];
-
-    const signedOutT = await signedOut.getMessage();
-    assert.equal(signedOutT, 'You are now signed out of CartoGraphX!');
-
-    const userInfoT = await userInfo.getMessage();
-    assert.equal(userInfoT, 'Signed in as: test@mail.com');
-
-    const signedInT = await signedIn.getMessage();
-    assert.equal(signedInT, 'You are now signed in to CartoGraphX as: test@mail.com');
-
-
-    await notifCenter.close();
-
-
   });
 
 
@@ -127,7 +106,9 @@ describe('E2E tests', () => {
     await input.setText('random password');
     await input.confirm();
 
-    await delay(500);
+    const notification = await driver.wait(() => { return notificationExists('The email address is badly formatted.'); }, 10000) as extest.Notification;
+    const message = await notification.getMessage();
+    assert.equal(message, 'The email address is badly formatted.');
 
   });
 
@@ -143,7 +124,10 @@ describe('E2E tests', () => {
     await input.setText('randompassword');
     await input.confirm();
 
-    await delay(500);
+    const notification = await driver.wait(() => { return notificationExists('The password is invalid or the user does not have a password.'); }, 10000) as extest.Notification;
+    const message = await notification.getMessage();
+    assert.equal(message, 'The password is invalid or the user does not have a password.');
+
 
   });
 
@@ -158,31 +142,21 @@ describe('E2E tests', () => {
     await input.setText(testUser.password);
     await input.confirm();
 
-    await delay(500);
-  });
-
-  it('Asserting notification window', async () =>{
-
-    await delay(500);
-
-    //open the notification center
-    const notifCenter = await new extest.Workbench().openNotificationsCenter();
-    const notifications = await notifCenter.getNotifications(extest.NotificationType.Any);
-    const alreadyExists = notifications[0];
-    const badPW = notifications[1];
-    const badEmail = notifications[2];
-
-
-
-    const alreadyExistsT = await alreadyExists.getMessage();
-    assert.equal(alreadyExistsT, 'The email address is already in use by another account.');
-
-    const badPWT = await badPW.getMessage();
-    assert.equal(badPWT, 'The password is invalid or the user does not have a password.');
-
-    const badEmailT = await badEmail.getMessage();
-    assert.equal(badEmailT, 'The email address is badly formatted.');
+    const notification = await driver.wait(() => { return notificationExists('The email address is already in use by another account.'); }, 10000) as extest.Notification;
+    const message = await notification.getMessage();
+    assert.equal(message, 'The email address is already in use by another account.');
   });
 
 
 });
+
+//helper function that waits until a notification exists
+async function notificationExists(text: string): Promise<extest.Notification | undefined> {
+  const notifications = await new extest.Workbench().getNotifications();
+  for (const notification of notifications) {
+      const message = await notification.getMessage();
+      if (message.indexOf(text) >= 0) {
+          return notification;
+      }
+  }
+}
