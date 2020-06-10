@@ -38,7 +38,7 @@ function _mkDirIfExists(dir: string): void {
 }
 
 function _readCoverOptions(testsRoot: string): ITestRunnerOptions | undefined {
-    const coverConfigPath = paths.join(testsRoot, '..', '..', '..', 'config', 'coverconfig.json');
+    const coverConfigPath = paths.join(testsRoot, '..', '..', 'config', 'coverconfig.json');
     if (fs.existsSync(coverConfigPath)) {
         const configContent = fs.readFileSync(coverConfigPath, 'utf-8');
         return JSON.parse(configContent);

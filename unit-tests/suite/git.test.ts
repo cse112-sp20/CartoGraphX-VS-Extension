@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import * as git from "../../../src/git";
+import * as git from "../../src/git";
 
 /** This test suite tests the types of the exported variables from gitRoot */
 suite("testing git.ts", () => {
