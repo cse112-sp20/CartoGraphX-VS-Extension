@@ -7,13 +7,14 @@ export let currentMap : string = "";
 /**
  * Function to display the current working file from the command
  */
-export const  displayCurrentWorkingFile = () => {
+export async function displayCurrentWorkingFile() {
     const rootPath = (vscode.workspace.rootPath !== undefined) ? vscode.workspace.rootPath : "";
     const openFileName = vscode.window.visibleTextEditors.map((e) => e.document.fileName.replace(rootPath, ""));
     const openFileLineCount = vscode.window.visibleTextEditors.map((e) => e.document.lineCount);
     // tslint:disable-next-line: max-line-length
     vscode.window.showInformationMessage("Currently in file: " + openFileName + "\n\nLines in file: " + openFileLineCount, { modal: true });
-};
+    return openFileName;
+}
 
 /**
  * Function to create a map from command
@@ -31,8 +32,10 @@ export async function createMapFunction() {
                 vscode.window.showErrorMessage('Error: Unable to communicate with server!');
             });
         }
+        return true;
     } else {
         vscode.window.showErrorMessage("Error: Invalid map name!");
+        return false;
     }
 }
 
@@ -52,8 +55,10 @@ export async function loadMapFunction() {
                 vscode.window.showErrorMessage('Error: Unable to communicate with server!');
             });
         }
+        return true;
     } else {
         vscode.window.showErrorMessage("Error: Invalid map id!");
+        return false;
     }
 }
 
