@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> webview.ts</title>
+  <title> commands.ts</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -86,7 +86,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>webview.ts</h1>
+                    <h1>commands.ts</h1>
                 </header>
                 
 
@@ -95,42 +95,74 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import * as vscode from 'vscode';
-import { gitRoot } from './git';
-import { XMLHttpRequest } from 'xmlhttprequest-ts';
+            <pre class="prettyprint source linenums"><code>import * as vscode from "vscode";
+import { sendGitData, setMapID } from "./git";
+import { auth } from "./main";
+import { generateWebview } from './webview';
 
-export let panel : any = undefined;
+export let currentMap : string = "";
+/**
+ * Function to display the current working file from the command
+ */
+export async function displayCurrentWorkingFile() {
+    const rootPath = (vscode.workspace.rootPath !== undefined) ? vscode.workspace.rootPath : "";
+    const openFileName = vscode.window.visibleTextEditors.map((e) => e.document.fileName.replace(rootPath, ""));
+    const openFileLineCount = vscode.window.visibleTextEditors.map((e) => e.document.lineCount);
+    // tslint:disable-next-line: max-line-length
+    vscode.window.showInformationMessage("Currently in file: " + openFileName + "\n\nLines in file: " + openFileLineCount, { modal: true });
+    return openFileName;
+}
 
 /**
- * Function to construct a webview in the second column that displays the web application
- * @param {string} mapID 
+ * Function to create a map from command
  */
-export async function generateWebview(mapID : string) {
-    panel = vscode.window.createWebviewPanel('mainPanel', 'Realtime Source Code Map',
-        vscode.ViewColumn.Two,
-        {
-            enableScripts: true,
-            retainContextWhenHidden: true
+export async function createMapFunction() {
+    const mapname = await vscode.window.showInputBox({placeHolder: "map name"});
+    if (mapname !== "" &amp;&amp; mapname !== undefined) {
+        currentMap = mapname;
+        let token = auth.currentUser?.getIdToken();
+        if (token) {
+            token.then(value => {
+                sendGitData(value);
+            });
+            token.catch(error => {
+                vscode.window.showErrorMessage('Error: Unable to communicate with server!');
+            });
         }
-    );
-    panel.webview.html = "";
-    let req = new XMLHttpRequest();
-    req.open('GET', 'https://raw.githubusercontent.com/cse112-sp20/CartoGraphX-Web-App/vscode-webview/vscode.html', true);
-    req.onreadystatechange = function() {
-        if (req.readyState === XMLHttpRequest.DONE) {
-            if (req.status === 200) {
-                let htmlString : string = req.responseText;
-                let parts : string[] = htmlString.split('id="mapKey"');
-                panel.webview.html = parts[0] + 'id="mapKey"' + ' value="' + mapID + '" ' + parts[1];
-                return panel;
-            } else {
-                vscode.window.showErrorMessage('An error has occurred while communicating with the server!');
-                return false;
-            }
-        }
-    };
-    req.send();
+        return true;
+    } else {
+        vscode.window.showErrorMessage("Error: Invalid map name!");
+        return false;
+    }
 }
+
+/**
+ * Function to load a map from command
+ */
+export async function loadMapFunction() {
+    const mapid = await vscode.window.showInputBox({placeHolder: "Enter a map ID"});
+    if (mapid !== "" &amp;&amp; mapid !== undefined) {
+        let token = auth.currentUser?.getIdToken();
+        if (token) {
+            token.then(value => {
+                setMapID(mapid);
+                generateWebview(mapid);
+            });
+            token.catch(error => {
+                vscode.window.showErrorMessage('Error: Unable to communicate with server!');
+            });
+        }
+        return true;
+    } else {
+        vscode.window.showErrorMessage("Error: Invalid map id!");
+        return false;
+    }
+}
+
+export const statusBarItem = vscode.window.createStatusBarItem(undefined, 1000);
+statusBarItem.command = "cartoGraphX.toolbarAction";
+statusBarItem.tooltip = "CGphX commands";
+statusBarItem.text = "CGphX$(rocket)"; // to rotate icon ~spin
 </code></pre>
         </article>
     </section>
