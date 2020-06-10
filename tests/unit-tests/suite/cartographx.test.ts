@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { createMapFunction, currentMap } from "../../src/cartographx";
+import { createMapFunction, currentMap } from "../../../src/cartographx";
 
 /** This test suite tests the types of the exported variables from chartgraphx */
 suite("type testing for chartgraphx.ts", () => {

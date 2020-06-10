@@ -4,7 +4,7 @@
 import * as extest from "vscode-extension-tester";
 import * as assert from "assert";
 import * as firebase from "firebase";
-import { firebaseConfig } from "../src/config";
+import { firebaseConfig } from "../../src/config";
 
 // Create a Mocha suite
 describe('E2E UI tests', function() {
