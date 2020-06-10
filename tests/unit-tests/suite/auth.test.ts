@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import * as firebase from "firebase";
 import * as vscode from "vscode";
-import { firebaseConfig } from "../../src/config";
+import { firebaseConfig } from "../../../src/config";
 
 /** This test suite uses the provided firebaseConfig and tests signIn and signOut functions. */
 suite("testing auth.ts", () => {

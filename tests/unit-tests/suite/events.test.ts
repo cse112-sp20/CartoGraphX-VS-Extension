@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { currentDocumentListener, curFile } from "../../src/events";
+import { currentDocumentListener, curFile } from "../../../src/events";
 
 /** This test suite tests the types of the exported variables from events */
 suite("testing events.ts", () => {
