@@ -124,7 +124,7 @@ export async function generateWebview(mapID : string) {
                 htmlString = parts[0] + 'id="mapKey"' + ' value="' + mapID + '" ' + parts[1];
                 panel.webview.html = htmlString;
             } else {
-                vscode.window.showErrorMessage('An error has occurred while communicating with the server!');
+                vscode.window.showErrorMessage('An error has occurred while communicating with the server!')
             }
         }
     };
