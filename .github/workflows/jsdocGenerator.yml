@@ -1,8 +1,5 @@
 name: GitHub pages
-on:
-  push:
-    branches:
-      - build/JSDoc
+on: ["push"]
 
 jobs:
   deploy:
