@@ -88,6 +88,11 @@ module.exports = {
 
         return result;
 
+    },
+
+
+    sensitizeFilePath: (filepath) => {
+        return filepath.replace(/\//g, "\\").replace(/./g, ",");
     }
 
 

@@ -60,14 +60,60 @@ router.post('/createMap', (req,res) => {
 });
 
 
-// router.post('/currentEdit', (req,res) => {
-//     let github_repo_name = req.body.github_repo_name;
-//     let github_repo_url  = req.body.github_repo_url;
-//     let filepath         = req.body.filepath;
+/**
+* Cloud function that update the user's current editting file in a particualr teammap
+*
+* @param    {XMLHttpRequest} req The request sent to this function which has
+*   the github repo name, url, and the map key
+*/
+router.post('/currentEdit', (req,res) => {
+    let github_repo_name  = req.body.github_repo_name;
+    let github_repo_url   = req.body.github_repo_url;
+    let filepath          = mapHelper.sensitizeFilePath(req.body.filepath);
+    let mapKey           = req.body.map_key;
+    let userName          = req.userName;
 
-    
+    teammap.child(map_key + "/current_editors").update(userName,mapKey+"@"+filepath);
 
-// });
+    res.status(200).json({});
 
+});
+
+
+/**
+* Cloud function that allow the user to join a teammap based on a map key
+*
+* @param    {XMLHttpRequest} req The request sent to this function which has
+*   the map key
+*/
+router.post('/joinMap', (req,res) => {
+    let mapKey           = req.body.map_key;
+    let userID           = req.userID;
+
+
+    admin.database().ref('/users/' + userID + "/team_maps").update(mapKey,True);
+
+    res.status(200).json({});
+
+});
+
+/**
+* Cloud function that show all the maps this user belong to
+*
+* @param    {XMLHttpRequest} req The request body is empty
+*/
+router.get('/showMaps', (req, res) =>{
+    let userID           = req.userID;
+
+    admin.database().ref('/users/' + userID + "/team_maps").once("value", function(snapshot){
+        let result = snapshot.val();
+        res.status(200).json(result);
+    }).catch(function(error){
+        res.status(400).json({});
+    });
+
+    res.status(400).json({});
+
+});
 
 module.exports = router;

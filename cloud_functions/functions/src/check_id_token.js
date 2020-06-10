@@ -14,7 +14,10 @@ function checkIDToken(request, response, next){
   .then(function(decodedToken) {
     let uid = decodedToken.uid;
     request.userID = uid;
-    next();
+    admin.database().ref('/users/' + uid + "/firstName").once("value", function(snapshot){
+      request.userName = snapshot.val();
+      next();
+    });
   }).catch(function(error) {
     response.sendStatus(401);
   });
