@@ -213,7 +213,7 @@ export async function sendGitData(token : string) {
                 mapId = response["data"];
                 generateWebview(mapId);
             } else {
-                console.log("An error has occurred while communicating with the server!");
+                vscode.window.showErrorMessage("An error has occurred while communicating with the server!");
             }
         }
     };
