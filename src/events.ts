@@ -2,7 +2,6 @@ import * as vscode from "vscode";
 import { repoName, gitUrl, gitRoot, mapId } from "./git";
 import { auth } from "./main";
 import { XMLHttpRequest } from "xmlhttprequest-ts";
-import { currentMap } from "./cartographx";
 
 export let curFile : string = "";
 
@@ -12,7 +11,7 @@ export let curFile : string = "";
  * @param token the id token of the user
  * @param file the current file that the user has open
  */
-async function sendCurrentFile(token : string, file : string) {
+export async function sendCurrentFile(token : string, file : string) {
     let payload : any = {};
     payload["github_repo_name"] = repoName;
     payload["github_repo_url"] = gitUrl;
@@ -22,8 +21,12 @@ async function sendCurrentFile(token : string, file : string) {
     req.open('POST', 'https://us-central1-remote-13.cloudfunctions.net/api/map/currentEdit', true);
     req.setRequestHeader('idToken', token);
     req.setRequestHeader('Content-Type', 'application/json');
+    req.onreadystatechange = function() {
+        if (req.readyState === XMLHttpRequest.DONE) {
+            return payload;
+        }
+    };
     req.send(JSON.stringify(payload));
-    //console.log("Sent current file to the server!");
 }
 
 /**
@@ -50,4 +53,5 @@ export async function currentDocumentListener() {
             } 
         }
     });
+    return curFile;
 }
