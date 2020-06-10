@@ -39,7 +39,7 @@
             "context"
         ], // non-complete list of globals that are easy to access unintentionally
         "no-var": "warn",
-        "jsdoc/no-types": "warn",
+        "jsdoc/no-types": "off",
         "semi": "off",
         "@typescript-eslint/semi": "warn",
         "@typescript-eslint/class-name-casing": "warn",
