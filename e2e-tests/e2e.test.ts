@@ -41,7 +41,7 @@ describe('E2E UI tests', function() {
 
     //this block activates the vscode extension
     const workbench = new extest.Workbench();
-    await delay(60000)
+    await delay(40000)
 
     await workbench.executeCommand(command);
     await delay(1000);
