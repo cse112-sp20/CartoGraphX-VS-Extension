@@ -37,7 +37,7 @@
 		"docs": "./node_modules/.bin/jsdoc -c ./config/jsdoc.json",
 		"code-cov": "npm install --global http-server && http-server -c-1 -p 8010 ./coverage",
 		"local-pipeline": "npm run pretest && npm run unit-test && npm run e2e-test && npm run docs && npm run lint && npm run code-cov",
-		"e2e-test": "./node_modules/.bin/extest setup-and-run -u -c, --code_version 1.45.0 ./out/e2e-tests/*.test.js"
+		"e2e-test": "./node_modules/.bin/extest setup-and-run -u ./out/e2e-tests/*.test.js"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
@@ -59,7 +59,7 @@
 		"remap-istanbul": "^0.13.0",
 		"rimraf": "^3.0.2",
 		"typescript": "^3.8.3",
-		"vscode-extension-tester": "^3.0.1",
+		"vscode-extension-tester": "^3.0.2",
 		"vscode-test": "^1.3.0"
 	},
 	"release": {
