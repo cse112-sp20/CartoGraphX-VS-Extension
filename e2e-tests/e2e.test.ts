@@ -37,20 +37,27 @@ describe('E2E UI tests', function() {
   });
 
 
-
   it('Testing Sign in', async () => {
 
     //this block activates the vscode extension
     const workbench = new extest.Workbench();
+    await delay(5000)
+
     await workbench.executeCommand(command);
+    await delay(1000);
     let input = new extest.InputBox();
 
     //Clicking Sign In and inputting credentials
     await input.selectQuickPick('Sign In');
+    await delay(1000);
     await input.setText(testUser.email);
+    await delay(1000);
     await input.confirm();
+    await delay(1000);
     await input.setText(testUser.password);
+    await delay(1000);
     await input.confirm();
+    await delay(1000);
 
     const notification = await driver.wait(() => { return notificationExists('You are now signed in to CartoGraphX as: ' + testUser.email); }, 10000) as extest.Notification;
     const message = await notification.getMessage();
@@ -70,12 +77,15 @@ describe('E2E UI tests', function() {
     const notification = await driver.wait(() => { return notificationExists('Signed in as: ' + testUser.email); }, 10000) as extest.Notification;
     const message = await notification.getMessage();
     assert.equal(message, 'Signed in as: ' + testUser.email);
+  });
 
-    //!!!!NOTWORKING!!!!
-    //assert.equal(testUser.email, auth.currentUser?.email);
-
-
-
+  it('Testing Create Map', async () => {
+    const workbench = new extest.Workbench();
+    await workbench.executeCommand(command);
+    let input = new extest.InputBox();
+    await input.selectQuickPick('Create map');
+    await input.setText('test map');
+    await input.confirm();
   });
 
   it('Testing Sign out', async () => {
@@ -150,7 +160,7 @@ describe('E2E UI tests', function() {
 
 });
 
-//helper function that waits until a notification exists
+//helper function that waits until a notification with text: string exists
 async function notificationExists(text: string): Promise<extest.Notification | undefined> {
   const notifications = await new extest.Workbench().getNotifications();
   for (const notification of notifications) {
