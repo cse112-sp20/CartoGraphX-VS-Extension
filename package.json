@@ -34,8 +34,10 @@
 		"watch": "./node_modules/.bin/tsc -watch -p ./config/",
 		"pretest": "npm run clean && npm run compile && npm run lint",
 		"unit-test": "node ./out/unit-tests/runTest.js",
-		"e2e-test": "./node_modules/.bin/extest setup-and-run -u -c, --code_version 1.45.0 ./out/e2e-tests/*.test.js",
-		"docs": "./node_modules/.bin/jsdoc -c ./config/jsdoc.json"
+		"docs": "./node_modules/.bin/jsdoc -c ./config/jsdoc.json",
+		"code-cov": "npm install --global http-server && http-server -c-1 -p 8010 ./coverage",
+		"local-pipeline": "npm run pretest && npm run unit-test && npm run e2e-test && npm run docs && npm run lint && npm run code-cov",
+		"e2e-test": "./node_modules/.bin/extest setup-and-run -u -c, --code_version 1.45.0 ./out/e2e-tests/*.test.js"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
