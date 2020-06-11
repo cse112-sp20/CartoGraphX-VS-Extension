@@ -96,6 +96,10 @@ describe('E2E UI tests', function() {
     await delay(500);
     await input.confirm();
     await delay(1000);
+
+    const editorView = new extest.EditorView();
+    await editorView.closeAllEditors();
+    await delay(500);
   });
 
   it('Testing Load Map', async () => {
@@ -111,13 +115,17 @@ describe('E2E UI tests', function() {
     await delay(500);
     await input.confirm();
     await delay(1000);
-  })
+
+    const editorView = new extest.EditorView();
+    await editorView.closeAllEditors();
+    await delay(500);
+  });
 
   it('Testing Sign out', async () => {
     const workbench = new extest.Workbench();
     await delay(500);
     await workbench.executeCommand(command);
-    await delay(500);
+    await delay(1500);
     let input = new extest.InputBox();
     await delay(500);
     
@@ -134,8 +142,9 @@ describe('E2E UI tests', function() {
     const workbench = new extest.Workbench();
     await delay(500);
     await workbench.executeCommand(command);
-    await delay(500);
+    await delay(1500);
     let input = new extest.InputBox();
+    await delay(500);
 
     //Clicking Sign In and inputting bad email
     await input.selectQuickPick('Sign In');
@@ -160,7 +169,7 @@ describe('E2E UI tests', function() {
     const workbench = new extest.Workbench();
     await delay(500);
     await workbench.executeCommand(command);
-    await delay(500);
+    await delay(1500);
     let input = new extest.InputBox();
     await delay(500);
 
@@ -186,7 +195,7 @@ describe('E2E UI tests', function() {
     const workbench = new extest.Workbench();
     await delay(500);
     await workbench.executeCommand(command);
-    await delay(500);
+    await delay(1500);
     let input = new extest.InputBox();
     await delay(500);
 

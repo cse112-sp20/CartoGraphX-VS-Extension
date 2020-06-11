@@ -59,5 +59,5 @@ export async function signUp(auth: firebase.auth.Auth) {
         .catch((error: { code: any; message: any; }) => {
             vscode.window.showWarningMessage(error.message);
         },
-    )
-};
+    );
+}
