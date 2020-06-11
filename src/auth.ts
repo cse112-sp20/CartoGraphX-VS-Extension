@@ -17,7 +17,7 @@ export async function signIn(auth: firebase.auth.Auth) {
             vscode.window.showWarningMessage(error.message);
         },
     );
-};
+}
 
 /**
  * This function will sign the user out.
@@ -31,7 +31,7 @@ export async function signOut(auth: firebase.auth.Auth) {
         .catch((error: { code: string; message: string; }) => {
             vscode.window.showWarningMessage(error.message);
     });
-};
+}
 
 /**
  * This function displays the email of the auth.currentUser object in a vscode information window
@@ -42,7 +42,7 @@ export async function userStatus(auth: firebase.auth.Auth) {
     const userEmail = auth.currentUser !== null ? auth.currentUser.email : "";
     // tslint:disable-next-line: max-line-length
     vscode.window.showInformationMessage(userEmail !== null ? ("Signed in as: " + userEmail) : "You are not signed in.." );
-};
+}
 
 /**
  * This function will let the user sign up by providing email and password.
@@ -59,5 +59,5 @@ export async function signUp(auth: firebase.auth.Auth) {
         .catch((error: { code: any; message: any; }) => {
             vscode.window.showWarningMessage(error.message);
         },
-    );
+    )
 };
