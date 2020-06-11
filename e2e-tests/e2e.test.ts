@@ -8,7 +8,7 @@ import { firebaseConfig } from "../src/config";
 
 // Create a Mocha suite
 describe('E2E UI tests', function() {
-  this.timeout(50000);
+  this.timeout(60000);
   // helper function to delay the test to wait for database
   function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms));
@@ -41,7 +41,7 @@ describe('E2E UI tests', function() {
 
     //this block activates the vscode extension
     const workbench = new extest.Workbench();
-    await delay(5000)
+    await delay(60000)
 
     await workbench.executeCommand(command);
     await delay(1000);
@@ -87,6 +87,15 @@ describe('E2E UI tests', function() {
     await input.setText('test map');
     await input.confirm();
   });
+
+  it('Testing Load Map', async () => {
+    const workbench = new extest.Workbench();
+    await workbench.executeCommand(command);
+    let input = new extest.InputBox();
+    await input.selectQuickPick('Load map');
+    await input.setText('TestMapKey');
+    await input.confirm();
+  })
 
   it('Testing Sign out', async () => {
     const workbench = new extest.Workbench();
@@ -137,8 +146,6 @@ describe('E2E UI tests', function() {
     const notification = await driver.wait(() => { return notificationExists('The password is invalid or the user does not have a password.'); }, 10000) as extest.Notification;
     const message = await notification.getMessage();
     assert.equal(message, 'The password is invalid or the user does not have a password.');
-
-
   });
 
   it('Testing signUp with a user that already exists', async () => {
