@@ -87,13 +87,16 @@ router.post('/currentEdit', (req,res) => {
 *   the map key
 */
 router.post('/joinMap', (req,res) => {
-    let mapKey           = req.body.map_key;
+    const body = JSON.parse(req.body);
+    let mapKey           = body.mapKey;
     let userID           = req.userID;
 
+    admin.database().ref('/users/' + userID + "/team_maps").update({ [mapKey] : true},function(snapshot){
+        res.status(204);
+    }).catch(e =>{
+        res.status(400).json({error});
+    });
 
-    admin.database().ref('/users/' + userID + "/team_maps").update(mapKey,True);
-
-    res.status(200).json({});
 
 });
 
@@ -104,15 +107,12 @@ router.post('/joinMap', (req,res) => {
 */
 router.get('/showMaps', (req, res) =>{
     let userID           = req.userID;
-
     admin.database().ref('/users/' + userID + "/team_maps").once("value", function(snapshot){
         let result = snapshot.val();
-        res.status(200).json(result);
+        res.status(200).json({result});
     }).catch(function(error){
-        res.status(400).json({});
+        res.status(400).json({error});
     });
-
-    res.status(400).json({});
 
 });
 
