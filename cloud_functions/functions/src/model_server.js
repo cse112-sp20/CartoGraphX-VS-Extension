@@ -5,7 +5,7 @@ const app = express();
 
 app.use(cors({origin: true}))
    .use(bodyParser.json())
-   //.use(require("./check_id_token.js"))
+   .use(require("./check_id_token.js"))
    .use("/directory", require("./model/directory_tree/router"))
    .use("/map", require("./model/map/router"))
    .get('*', (_, response) => {
