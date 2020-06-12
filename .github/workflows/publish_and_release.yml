@@ -52,7 +52,7 @@ jobs:
             with:
                 node-version: 12
         -   name: Install dependencies
-            run: npm install --only=production
+            run: npm install
 
             # Step for setting the config key into src/config.ts
         -   name: Add Firebase config key
