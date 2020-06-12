@@ -29,7 +29,11 @@ jobs:
             with:
                 node-version: 12
         -   name: Install dependencies
-            run: npm install
+            run: npm install --only=production
+        
+        -   name: Compile the source code
+            run: npm run compile
+
         -   name: Release
             env:
                 GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
@@ -48,11 +52,13 @@ jobs:
             with:
                 node-version: 12
         -   name: Install dependencies
-            run: npm install
+            run: npm install --only=production
 
             # Step for setting the config key into src/config.ts
         -   name: Add Firebase config key
             run: echo `sed 's/API_KEY/${{ secrets.FIREBASE_KEY }}/' src/config.ts` > src/config.ts
+        -   name: Compile the source code
+            run: npm run compile
 
         -   name: Get Current tag
             id: current_tag
