@@ -21,4 +21,4 @@ jobs:
         -   name: yarn install
             run: yarn install
         -   name: eslint
-            uses: icrawl/action-eslint@v1
+            run: npm run lint

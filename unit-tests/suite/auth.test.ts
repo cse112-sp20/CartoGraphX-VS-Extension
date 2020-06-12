@@ -2,6 +2,7 @@ import * as assert from "assert";
 import * as firebase from "firebase";
 import * as vscode from "vscode";
 import { firebaseConfig } from "../../src/config";
+import { signOut, userStatus } from "../../src/auth";
 
 /** This test suite uses the provided firebaseConfig and tests signIn and signOut functions. */
 suite("testing auth.ts", () => {
@@ -25,7 +26,8 @@ suite("testing auth.ts", () => {
         // tslint:disable-next-line: no-empty
         await auth.signInWithEmailAndPassword(testUser.email, testUser.password).catch((error: { code: any; message: any; }) => {});
         assert.equal(testUser.email, auth.currentUser?.email);
-        await auth.signOut();
+        await userStatus(auth);
+        await signOut(auth);
         assert.equal(null, auth.currentUser);
     });
 

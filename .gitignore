@@ -5,3 +5,5 @@ node_modules
 src/config.ts
 test-resources
 coverage/
+.DS_Store
+.nyc_output/

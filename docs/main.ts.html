@@ -1,0 +1,217 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> main.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                <div class="dropdown is-hoverable is-right">
+                    <a class="dropdown-trigger link">
+                        Tutorials
+                        <i class="fas fa-chevron-down fa-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-content">
+                        
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#activate">activate</a></li><li><a href="global.html#createMapFunction">createMapFunction</a></li><li><a href="global.html#currentDocumentListener">currentDocumentListener</a></li><li><a href="global.html#deactivate">deactivate</a></li><li><a href="global.html#displayCurrentWorkingFile">displayCurrentWorkingFile</a></li><li><a href="global.html#fetchRemoteGit">fetchRemoteGit</a></li><li><a href="global.html#findGitFileLines">findGitFileLines</a></li><li><a href="global.html#findGitFiles">findGitFiles</a></li><li><a href="global.html#findGitRoot">findGitRoot</a></li><li><a href="global.html#findGitUrl">findGitUrl</a></li><li><a href="global.html#generateWebview">generateWebview</a></li><li><a href="global.html#loadMapFunction">loadMapFunction</a></li><li><a href="global.html#sendCurrentFile">sendCurrentFile</a></li><li><a href="global.html#sendGitData">sendGitData</a></li><li><a href="global.html#setMapID">setMapID</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signOut">signOut</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#userStatus">userStatus</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>main.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* eslint-disable no-unused-expressions */
+import * as firebase from "firebase";
+import * as vscode from "vscode";
+import { signIn, signOut, userStatus, signUp} from "./auth";
+import { displayCurrentWorkingFile, statusBarItem, createMapFunction, loadMapFunction } from "./commands";
+import { firebaseConfig } from "./config";
+import { currentDocumentListener } from "./events";
+import { fetchRemoteGit, findGitFileLines, findGitFiles, findGitRoot, findGitUrl, gitRoot, sendGitData } from "./git";
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+export const auth = firebase.auth();
+
+
+/**
+ * This function is called when the extension is activated
+ *
+ * @param  {vscode.ExtensionContext} context
+ */
+export function activate(context: vscode.ExtensionContext) {
+    findGitRoot();
+    fetchRemoteGit();
+    findGitFiles();
+    findGitUrl();
+    findGitFileLines();
+
+    vscode.window.showInformationMessage("CartoGraphX is now active!");
+    statusBarItem.show();
+
+    /** This command displays a quickpick in the IDE window that allows the user to choose between available commands */
+    const disposable = vscode.commands.registerCommand("cartoGraphX.toolbarAction", async () => {
+        if (auth.currentUser !== null) {
+            vscode.window.showQuickPick(
+                [
+                    { label: "Display Current Working File", undefined, target: displayCurrentWorkingFile },
+                    { label: "Get user info", undefined, target: userStatus },
+                    { label: "Sign out", description: "Stop CartoGraphX tracking", target: signOut },
+                    { label: "Create map", descrition: "Create a map", undefined, target: createMapFunction},
+                    { label: "Load map", description: "Load a map", undefined, target: loadMapFunction}
+                ],
+                { placeHolder: "CartoGraphX commands" }
+            ).then( (method) => {
+                method?.target(auth);
+            });
+        } else {
+            vscode.window.showQuickPick([
+                { label: "Sign In", description: "Sign in using email and password", target: signIn },
+                { label: "Sign Up", description: "Create a user with email and password", target: signUp }
+                ],
+                { placeHolder: "Sign in or create a new CartoGraphX user" }
+            ).then( (method) => {
+                method?.target(auth);
+            });
+        }
+    });
+    context.subscriptions.push(disposable);
+
+
+    /** Adds an event listener for changes to the user's sign-in state. (login/logout) */ 
+    auth.onAuthStateChanged((firebaseUser) => {
+        if (firebaseUser === null) {
+            statusBarItem.color = "darkgrey";
+        } else {
+            if (gitRoot !== "") {
+                statusBarItem.color = "white";
+                // let token = auth.currentUser?.getIdToken();
+                // if (token) {
+                //     token.then(value => {
+                //         sendGitData(value);
+                //     });
+                //     token.catch(error => {
+                //         vscode.window.showErrorMessage('Error: Unable to communicate with server!');
+                //     });
+                // }
+                currentDocumentListener();
+
+            } else {
+                statusBarItem.color = "darkgrey";
+                vscode.window.showErrorMessage("Not currently in a Git repository!");
+            }
+        }
+        console.log(JSON.stringify(firebaseUser, null, 2));
+    });
+    
+}
+
+/** this method is called when your extension is deactivated */
+// tslint:disable-next-line: no-empty
+export function deactivate() {}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

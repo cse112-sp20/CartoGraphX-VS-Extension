@@ -2,7 +2,7 @@
 import * as firebase from "firebase";
 import * as vscode from "vscode";
 import { signIn, signOut, userStatus, signUp} from "./auth";
-import { displayCurrentWorkingFile, statusBarItem, createMapFunction, loadMapFunction } from "./cartographx";
+import { displayCurrentWorkingFile, statusBarItem, createMapFunction, loadMapFunction } from "./commands";
 import { firebaseConfig } from "./config";
 import { currentDocumentListener } from "./events";
 import { fetchRemoteGit, findGitFileLines, findGitFiles, findGitRoot, findGitUrl, gitRoot, sendGitData } from "./git";
@@ -26,21 +26,21 @@ export function activate(context: vscode.ExtensionContext) {
     findGitUrl();
     findGitFileLines();
 
-    vscode.window.showInformationMessage("ChartGraphX is now active!");
+    vscode.window.showInformationMessage("CartoGraphX is now active!");
     statusBarItem.show();
 
     /** This command displays a quickpick in the IDE window that allows the user to choose between available commands */
-    const disposable = vscode.commands.registerCommand("chartGraphX.toolbarAction", async () => {
+    const disposable = vscode.commands.registerCommand("cartoGraphX.toolbarAction", async () => {
         if (auth.currentUser !== null) {
             vscode.window.showQuickPick(
                 [
                     { label: "Display Current Working File", undefined, target: displayCurrentWorkingFile },
                     { label: "Get user info", undefined, target: userStatus },
-                    { label: "Sign out", description: "Stop ChartGraphX tracking", target: signOut },
+                    { label: "Sign out", description: "Stop CartoGraphX tracking", target: signOut },
                     { label: "Create map", descrition: "Create a map", undefined, target: createMapFunction},
                     { label: "Load map", description: "Load a map", undefined, target: loadMapFunction}
                 ],
-                { placeHolder: "ChartGraphX commands" }
+                { placeHolder: "CartoGraphX commands" }
             ).then( (method) => {
                 method?.target(auth);
             });
@@ -49,7 +49,7 @@ export function activate(context: vscode.ExtensionContext) {
                 { label: "Sign In", description: "Sign in using email and password", target: signIn },
                 { label: "Sign Up", description: "Create a user with email and password", target: signUp }
                 ],
-                { placeHolder: "Sign in or create a new ChartGraphX user" }
+                { placeHolder: "Sign in or create a new CartoGraphX user" }
             ).then( (method) => {
                 method?.target(auth);
             });

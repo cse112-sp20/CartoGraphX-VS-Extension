@@ -1,0 +1,259 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> git.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                <div class="dropdown is-hoverable is-right">
+                    <a class="dropdown-trigger link">
+                        Tutorials
+                        <i class="fas fa-chevron-down fa-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-content">
+                        
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#activate">activate</a></li><li><a href="global.html#createMapFunction">createMapFunction</a></li><li><a href="global.html#currentDocumentListener">currentDocumentListener</a></li><li><a href="global.html#deactivate">deactivate</a></li><li><a href="global.html#displayCurrentWorkingFile">displayCurrentWorkingFile</a></li><li><a href="global.html#fetchRemoteGit">fetchRemoteGit</a></li><li><a href="global.html#findGitFileLines">findGitFileLines</a></li><li><a href="global.html#findGitFiles">findGitFiles</a></li><li><a href="global.html#findGitRoot">findGitRoot</a></li><li><a href="global.html#findGitUrl">findGitUrl</a></li><li><a href="global.html#generateWebview">generateWebview</a></li><li><a href="global.html#loadMapFunction">loadMapFunction</a></li><li><a href="global.html#sendCurrentFile">sendCurrentFile</a></li><li><a href="global.html#sendGitData">sendGitData</a></li><li><a href="global.html#setMapID">setMapID</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signOut">signOut</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#userStatus">userStatus</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>git.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as vscode from 'vscode';
+import * as simpleGit from 'simple-git/promise';
+import { XMLHttpRequest } from 'xmlhttprequest-ts';
+import { currentMap } from './commands';
+import { generateWebview } from './webview';
+
+// Set the global variable gitRoot to the root of the Git repository
+export let gitRoot : string = "";
+export let gitFetch : string = "";
+export let gitFilesArray : string[] = [];
+export let gitUrl : string = "";
+export let repoName : string = "";
+export let gitFileLines : any = {};
+export let vscodeRoot :string | undefined = vscode.workspace.rootPath;
+export let git : any = simpleGit(vscodeRoot);
+export let mapId : string = "";
+
+
+/**
+ * This function finds the Git root if the folder open in vscode is in a Git repository.
+ */
+export async function findGitRoot() {
+    try {
+        gitRoot = await git.revparse(['--show-toplevel']);
+    } catch(err) {
+        // Display an error message and sets gitRoot to an empty string if not in a Git repository
+        vscode.window.showErrorMessage('Error: The current root folder is not in a Git repository!');
+        gitRoot = "";
+        return gitRoot;
+    }
+    vscode.window.showInformationMessage('The Git root directory is "' + gitRoot + '".');
+    return gitRoot;
+}
+
+
+/**
+ * This function performs a git fetch on the current repository.
+ */
+export async function fetchRemoteGit() {
+    gitFetch = await git.fetch('origin', 'master');
+    //console.log(gitfetch);
+    return gitFetch;
+}
+
+
+/**
+ * This function gets an array of all the files in the remote master branch.
+ */
+export async function findGitFiles() {
+    let gitFiles = await git.raw(['ls-tree', '-r', 'origin/master', '--full-tree', '--name-status']);
+    gitFilesArray = gitFiles.split('\n');
+    gitFilesArray.pop(); // Removes the last empty element from the array created from splitting on \n
+    //console.log(gitFilesArray);
+    return gitFilesArray;
+}
+
+
+/**
+ * This function gets the url of the remote git repository.
+ */
+export async function findGitUrl() {
+    gitUrl = await git.raw(['config', '--get', 'remote.origin.url']);
+    gitUrl = gitUrl.split('\n')[0];
+    repoName = gitUrl.split('.git')[0].split('/').slice(-1)[0];
+    //console.log(gitUrl);
+    //console.log(repoName);
+    return gitUrl;
+}
+
+/**
+ * This function gets the line numbers of each file in the remote master branch.
+ */
+export async function findGitFileLines() {
+    // git hash-object -t tree /dev/null
+    let emptyTreeHash = await git.raw(['hash-object', '-t', 'tree', '/dev/null']);
+    emptyTreeHash = emptyTreeHash.split('\n')[0];
+    // git diff --stat &lt;empty_tree_hash> origin/master
+    let gitLines = await git.raw(['diff', '--stat', emptyTreeHash, 'origin/master']);
+    gitLines = gitLines.split('\n');
+    gitLines.pop();
+    gitLines.pop();
+    for (let i = 0; i &lt; gitLines.length; i++) {
+        let curLine = gitLines[i].split('|'); 
+        let key : string = curLine[0].trim();
+        let val : string= curLine[1].split('+')[0].trim();
+        if (val.includes('bytes')) {
+            val = val.split('>')[1].trim();
+        }
+        gitFileLines[key] = val;
+    }
+    return gitFileLines;
+    //console.log(gitFileLines);
+}
+
+/**
+ * This function sends the aggregated git data to the backend endpoint.
+ * 
+ * @param {string} token
+ */
+export async function sendGitData(token : string) {
+    let payload : any = {};
+    let response : any = {};
+    payload["map_name"] = currentMap;
+    payload["github_repo_name"] = repoName;
+    payload["github_repo_url"] = gitUrl;
+    payload["github_repo_file_trees"] = gitFileLines;
+    let req = new XMLHttpRequest();
+    req.open('POST', 'https://us-central1-remote-13.cloudfunctions.net/api/map/createMap', true);
+    req.setRequestHeader('idToken', token);
+    req.setRequestHeader('Content-Type', 'application/json');
+    req.onreadystatechange = function() {
+        if (req.readyState === XMLHttpRequest.DONE) {
+            if (req.status === 200) {
+                response = JSON.parse(req.responseText);
+                vscode.window.showInformationMessage('Your map key is: "' + response["data"] + '"!');
+                mapId = response["data"];
+                generateWebview(mapId);
+            } else {
+                vscode.window.showErrorMessage("An error has occurred while communicating with the server!");
+            }
+        }
+    };
+    //console.log(JSON.stringify(payload));
+    req.send(JSON.stringify(payload));
+}
+
+/**
+ * Function to set the map id of the current extension
+ * @param {string} id
+ */
+export function setMapID(id : string) {
+    mapId = id;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

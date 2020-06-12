@@ -18,7 +18,7 @@
 		"*"
 	],
 	"homepage": "https://github.com/cse112-sp20/CartoGraphX-VS-Extension/blob/master/vsc-extension-quickstart.md",
-	"main": "./out/main.js",
+	"main": "./out/src/main.js",
 	"contributes": {
 		"commands": [
 			{
@@ -28,12 +28,16 @@
 		]
 	},
 	"scripts": {
-		"compile": "tsc -p ./",
-		"lint": "eslint src --ext ts",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run lint",
-		"unit-test": "node ./out/test/runTest.js",
-		"e2e-test": "./node_modules/.bin/extest setup-and-run ./out/e2e-tests/*.test.js"
+		"clean": "./node_modules/.bin/rimraf out",
+		"compile": "./node_modules/.bin/tsc -p ./config/",
+		"lint": "./node_modules/.bin/eslint --config=config/.eslintrc.json --ext ts src",
+		"watch": "./node_modules/.bin/tsc -watch -p ./config/",
+		"pretest": "npm run clean && npm run compile && npm run lint",
+		"unit-test": "node ./out/unit-tests/runTest.js",
+		"docs": "./node_modules/.bin/jsdoc -c ./config/jsdoc.json",
+		"code-cov": "npm install --global http-server && http-server -c-1 -p 8010 ./coverage",
+		"local-pipeline": "npm run pretest && npm run unit-test && npm run e2e-test && npm run docs && npm run lint && npm run code-cov",
+		"e2e-test": "./node_modules/.bin/extest setup-and-run -u ./out/e2e-tests/*.test.js"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
@@ -42,16 +46,20 @@
 		"@types/vscode": "^1.45.0",
 		"@typescript-eslint/eslint-plugin": "^2.30.0",
 		"@typescript-eslint/parser": "^2.30.0",
+		"better-docs": "^2.0.1",
 		"decache": "^4.6.0",
 		"eslint": "^6.8.0",
 		"eslint-plugin-jsdoc": "^25.4.1",
 		"glob": "^7.1.6",
 		"istanbul": "^0.4.5",
+		"jsdoc": "^3.6.4",
+		"jsdoc-plugin-typescript": "^2.0.5",
 		"jshint": "^2.11.1",
 		"mocha": "^7.1.2",
 		"remap-istanbul": "^0.13.0",
+		"rimraf": "^3.0.2",
 		"typescript": "^3.8.3",
-		"vscode-extension-tester": "^3.0.1",
+		"vscode-extension-tester": "^3.0.2",
 		"vscode-test": "^1.3.0"
 	},
 	"release": {
@@ -95,5 +103,13 @@
 		"firebase": "^7.14.3",
 		"simple-git": "^2.5.0",
 		"xmlhttprequest-ts": "^1.0.1"
+	},
+	"nyc": {
+		"include": [
+			"out/src/**/*.js"
+		],
+		"exclude": [
+			"test-resources/**/*.js"
+		]
 	}
 }

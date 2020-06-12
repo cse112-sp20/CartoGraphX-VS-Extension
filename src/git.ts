@@ -1,11 +1,12 @@
 import * as vscode from 'vscode';
 import * as simpleGit from 'simple-git/promise';
 import { XMLHttpRequest } from 'xmlhttprequest-ts';
-import { currentMap } from './cartographx';
+import { currentMap } from './commands';
 import { generateWebview } from './webview';
 
 // Set the global variable gitRoot to the root of the Git repository
 export let gitRoot : string = "";
+export let gitFetch : string = "";
 export let gitFilesArray : string[] = [];
 export let gitUrl : string = "";
 export let repoName : string = "";
@@ -25,10 +26,10 @@ export async function findGitRoot() {
         // Display an error message and sets gitRoot to an empty string if not in a Git repository
         vscode.window.showErrorMessage('Error: The current root folder is not in a Git repository!');
         gitRoot = "";
+        return gitRoot;
     }
-    if (gitRoot !== "") {
-        vscode.window.showInformationMessage('The Git root directory is "' + gitRoot + '".');
-    }
+    vscode.window.showInformationMessage('The Git root directory is "' + gitRoot + '".');
+    return gitRoot;
 }
 
 
@@ -36,8 +37,9 @@ export async function findGitRoot() {
  * This function performs a git fetch on the current repository.
  */
 export async function fetchRemoteGit() {
-    let gitfetch = await git.fetch('origin', 'master');
+    gitFetch = await git.fetch('origin', 'master');
     //console.log(gitfetch);
+    return gitFetch;
 }
 
 
@@ -49,6 +51,7 @@ export async function findGitFiles() {
     gitFilesArray = gitFiles.split('\n');
     gitFilesArray.pop(); // Removes the last empty element from the array created from splitting on \n
     //console.log(gitFilesArray);
+    return gitFilesArray;
 }
 
 
@@ -61,6 +64,7 @@ export async function findGitUrl() {
     repoName = gitUrl.split('.git')[0].split('/').slice(-1)[0];
     //console.log(gitUrl);
     //console.log(repoName);
+    return gitUrl;
 }
 
 /**
@@ -84,6 +88,7 @@ export async function findGitFileLines() {
         }
         gitFileLines[key] = val;
     }
+    return gitFileLines;
     //console.log(gitFileLines);
 }
 
@@ -111,11 +116,11 @@ export async function sendGitData(token : string) {
                 mapId = response["data"];
                 generateWebview(mapId);
             } else {
-                console.log("An error has occurred while communicating with the server!");
+                vscode.window.showErrorMessage("An error has occurred while communicating with the server!");
             }
         }
     };
-    console.log(JSON.stringify(payload));
+    //console.log(JSON.stringify(payload));
     req.send(JSON.stringify(payload));
 }
 
