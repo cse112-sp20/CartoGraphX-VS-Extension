@@ -1,6 +1,10 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/9adcf7b86bfb69c9d32d/maintainability)](https://codeclimate.com/github/cse112-sp20/CartoGraphX-VS-Extension/maintainability) ![ESLint](https://github.com/cse112-sp20/CartoGraphX-VS-Extension/workflows/ESLint/badge.svg) ![Test Coverage checker](https://github.com/cse112-sp20/CartoGraphX-VS-Extension/workflows/Test%20Coverage%20checker/badge.svg)  ![e2e Tests](https://github.com/cse112-sp20/CartoGraphX-VS-Extension/workflows/e2e%20Tests/badge.svg)  ![Unit Tests](https://github.com/cse112-sp20/CartoGraphX-VS-Extension/workflows/Unit%20Tests/badge.svg) ![Release and Publish](https://github.com/cse112-sp20/CartoGraphX-VS-Extension/workflows/Release%20and%20Publish/badge.svg)
+
 # CartoGraphX VS Code extension
 
-The CartoGraphX VS Code extension is used to track and share user-metrics inside a team workspace to be viewed on the interactive source-code map displayed on our website. This tool will greatly increase accountability because each developer’s work will be visible in real time.
+The CartoGraphX VS Code extension is used to track and share user-metrics inside a team workspace to be viewed on the interactive source-code map displayed on our website. This tool will greatly increase accountability because each developer’s work will be visible in real time. 
+
+If you are interested in contributing to this project, please refer to the our repo's wiki page.
 
 ## Running the extension
 
