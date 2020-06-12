@@ -1,7 +1,16 @@
+.github/**
 .vscode/**
 .vscode-test/**
-out/test/**
+cloud_functions/**
+config/**
+coverage/**
+docs/**
+e2e-tests/**
+out/e2e-tests/**
+out/unit-tests/**
 src/**
+test-resources/**
+unit-tests/**
 .gitignore
 vsc-extension-quickstart.md
 **/tsconfig.json
